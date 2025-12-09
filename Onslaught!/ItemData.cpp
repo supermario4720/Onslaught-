@@ -1,4 +1,3 @@
-#pragma once
 #include "ItemData.hpp"
 
 // FIX ITEM PATHS IN MAP
@@ -14,12 +13,7 @@
 // 
 // ==================================
 
-enum class ItemID : uint16_t {
-    None = 0,
-    Wood = 1,
-    Stone = 2,
-    Bone = 3
-};
+
 
 const ItemData& ItemDatabase::get(ItemID id) {
     return getMap().at(id);
@@ -44,8 +38,8 @@ const std::unordered_map<ItemID, ItemData>& ItemDatabase::getMap() {
             99
         }},
         { ItemID::Bone, {
-            "Iron Sword",
-            "A basic iron sword.",
+            "Bone",
+            "A basic item drop from skeletons.",
             "items/placeholder.png",
             true,
             99

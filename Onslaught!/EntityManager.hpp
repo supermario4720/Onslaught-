@@ -23,6 +23,8 @@ private:
 	std::weak_ptr<Town> townPtr;
 	Camera* camera = nullptr;
 
+	sf::Vector2f playerPositionHolder;
+
 	int nextEntityID = 0;
 
 	int enemyCount = 0;

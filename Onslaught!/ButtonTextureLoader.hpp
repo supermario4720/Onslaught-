@@ -17,10 +17,13 @@ public:
 
     void loadAllTextures();
 
+    void clearManager();
+
 private:
     std::unordered_map<std::string, sf::Texture> textures;
 
     ButtonTextureLoader() = default;
+    ~ButtonTextureLoader();
     ButtonTextureLoader(const ButtonTextureLoader&) = delete;
     ButtonTextureLoader& operator=(const ButtonTextureLoader&) = delete;
 };

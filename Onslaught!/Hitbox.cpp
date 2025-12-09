@@ -207,7 +207,7 @@ void SwingHitbox::updateTriggerHitbox(float dt, sf::Vector2f currentPlayerPos, s
 				}
 			}
 			else if (entityHB->getType() == 1) {
-				if (isColliding = CollisionManager::checkCircleRectCollision(entityHB->getCircleHitbox(), rectHB)) {
+				if ((isColliding = CollisionManager::checkCircleRectCollision(entityHB->getCircleHitbox(), rectHB))) {
 					//std::cout << "circ rect" << std::endl;
 				}
 			}

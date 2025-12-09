@@ -12,6 +12,7 @@ private:
 
     int quantity = 1;
     float lifetime = 0.f;
+    float movementSpeed = 150.f;
     sf::Vector2f position{};
     sf::Sprite sprite;
 
@@ -35,4 +36,6 @@ public:
     bool isPickable() const;
 
     const std::string& name() const;
+
+    ItemID getItemID() const;
 };

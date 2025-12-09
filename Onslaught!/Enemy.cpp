@@ -97,11 +97,10 @@ void Enemy::initializePtr(std::shared_ptr<Enemy> ptr) {
 
 
 void Enemy::update(float dt) {
-    if (isDying) {
-        onDeath();
+    if (!isAlive) {
         return;
     }
-    if (!isAlive) {
+    if (isDying) {
         onDeath();
         return;
     }
@@ -111,8 +110,8 @@ void Enemy::update(float dt) {
     if (targetState == AnimationController::State::Death) {
         animations.forceAnimationEnd();
         animations.setState(targetState, false, !(targetState != AnimationController::State::Death));
-        // true until animation is over
-        isDying = !animations.update(dt);
+        // true when animation is over
+        isDying = animations.update(dt);
         animations.applyToSprite(sprite);
         return;
     }
@@ -297,7 +296,7 @@ void Enemy::onCollision(float damage) {
 
 void Enemy::onDeath() {
     // call EntityManager instance to get item manager, and spawn item
-    entityManager.spawnItems();
+    entityManager.spawnItems(drop, getPosition(), qty);
 
     isAlive = false;
 }

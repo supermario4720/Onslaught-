@@ -24,6 +24,7 @@
 #include "CollisionManager.hpp"
 #include "EntityManager.hpp"
 #include "ButtonTextureLoader.hpp"
+#include "ItemTextures.hpp"
 
 #include <vector>
 #include <iostream>
@@ -33,6 +34,7 @@
 int main() {
     AudioManager::getInstance().loadAllSounds();
     ButtonTextureLoader::getInstance().loadAllTextures();
+    ItemTextures::getInstance().loadAllTextures();
     // play noise at start so SFML loads sound properly
     AudioManager::getInstance().play("ButtonClick", 0.f);
 
@@ -164,7 +166,7 @@ int main() {
                 //compactInv.Draw(window);
 
                 // check for game over
-                if (!entityManager.isPlayerAlive() || !entityManager.isTownAlive()) GameStateManager::State::GameOver;
+                if (!entityManager.isPlayerAlive() || !entityManager.isTownAlive()) gameState = GameStateManager::State::GameOver;
                 if (firstPlay == 0 ) firstPlay = 1;
                 break;
             }
@@ -247,5 +249,8 @@ int main() {
 
         window.display();
     }
+    AudioManager::getInstance().clearManager();
+    ButtonTextureLoader::getInstance().clearManager();
+    entityManager.reset();
     return 0;
 }

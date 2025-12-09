@@ -14,7 +14,7 @@ public:
     Object(sf::Vector2f position, sf::Vector2f size);
     ~Object();
     static std::shared_ptr<Object> create(sf::Vector2f position, sf::Vector2f size);
-    void initializeHitbox();
+    void initializeHitbox() override;
     void initializePtr(std::shared_ptr<Object> ptr);
 
     void update(float dt) override;

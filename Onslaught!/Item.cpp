@@ -1,4 +1,3 @@
-#pragma once
 #include "Item.hpp"
 #include "ItemTextures.hpp"
 
@@ -8,7 +7,9 @@ Item::Item(ItemID _id, const sf::Vector2f& pos, int qty)
 {
     auto bounds = sprite.getLocalBounds();
     sprite.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
-    sprite.setScale({ 20.f, 20.f });
+
+
+    sprite.setScale({ 20.f/bounds.size.x, 20.f/bounds.size.y });
     sprite.setPosition(position);
 }
 
@@ -21,13 +22,23 @@ void Item::update(float dt, sf::Vector2f playerPos) {
     }
 
     sf::Vector2f distance = playerPos - sprite.getPosition();
+    sf::Vector2f movementVector = distance;
+    if (movementVector.x != 0.f || movementVector.y != 0.f) {
+        movementVector = movementVector.normalized() * movementSpeed;
+    }
+    float distlen = distance.length();
 
-    if (distance.length() < 10.f) {
+    if (distlen < 10.f) {
         inPickupRange = true;
     }
+    else {
+        inPickupRange = false;
+    }
 
-    if (distance.length() < 100.f) {
-        sprite.move(distance * dt * 5.f);
+    if (distlen < 50.f) {
+        float relativeSpeed = (110.f - distlen)* (110.f - distlen) / 12100.f;
+        if (relativeSpeed > 1.f) relativeSpeed = 1.f;
+        sprite.move(movementVector * relativeSpeed* dt);
     }
 }
 
@@ -53,4 +64,8 @@ bool Item::isPickable() const {
 
 const std::string& Item::name() const {
     return ItemDatabase::get(id).name;
+}
+
+ItemID Item::getItemID() const {
+    return id;
 }

@@ -2,6 +2,7 @@
 #include "Item.hpp"
 #include "ItemData.hpp"
 #include <vector>
+#include <iostream>
 
 class ItemManager {
 public:
@@ -20,15 +21,16 @@ public:
 
         // remove expired items
         for (auto it = items.begin(); it != items.end(); ) {
-            if (!(*it)->isPickable()) {
+            if ((*it)->isPickable()) {
                 // ADD ITEM TO INVENTORY FIRST
                 //
                 //
                 //
-
+                std::cout << "Picked" << std::endl;
                 it = items.erase(it);
             }
-            else if (!(*it)->isExpired()) {
+            else if ((*it)->isExpired()) {
+                std::cout << "Expired" << std::endl;
                 it = items.erase(it);
             }
             else {

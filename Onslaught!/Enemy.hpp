@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Entity.hpp"
 #include "Hitbox.hpp"
+#include "ItemID.hpp"
 #include "AnimationController.hpp"
 
 class EntityManager;
@@ -37,6 +38,10 @@ private:
 	bool isAttacking;
 	bool isTakingDamage;
 	float attackDamage;
+
+	// Item drops
+	ItemID drop = ItemID::Bone; //bone
+	int qty = 1;
 
 public:
 	Enemy(sf::Vector2f initPos, float enemySize=30.f, float speed = 75.f );

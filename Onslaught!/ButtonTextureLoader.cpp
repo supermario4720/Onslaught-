@@ -1,5 +1,8 @@
 #include "ButtonTextureLoader.hpp"
 
+ButtonTextureLoader::~ButtonTextureLoader() {
+    textures.clear();
+}
 
 void ButtonTextureLoader::loadTexture(const std::string& name, const std::string& filepath) {
     sf::Texture tex;
@@ -27,4 +30,8 @@ void ButtonTextureLoader::loadAllTextures() {
 
     loadTexture("ButtonPressed", "resources/buttonTextures/Button_Disable.png");
     loadTexture("LongButtonPressed", "resources/buttonTextures/Button_Disable_3Slides.png");
+}
+
+void ButtonTextureLoader::clearManager() {
+	textures.clear();
 }

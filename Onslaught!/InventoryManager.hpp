@@ -29,3 +29,26 @@
 //    InventoryManager() {}
 //    std::vector<Item> items;
 //};
+
+#pragma once
+#include "Item.hpp"
+#include "ItemData.hpp"
+#include <vector>
+#include <iostream>
+
+struct InventorySlot {
+
+};
+
+class InventoryManager {
+public:
+    void update(float dt, sf::Vector2f playerPos) {
+    }
+
+    void reset() {
+        items.clear();
+    }
+
+private:
+    std::unordered_map<int, InventorySlot> inventory;
+};

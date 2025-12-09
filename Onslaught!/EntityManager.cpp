@@ -13,7 +13,8 @@
 EntityManager::EntityManager()
 	: nextEntityID(0), enemyCount(0), maxEnemies(10), 
 	spawnTimer(0.f), nextInterval(1.f), 
-	minSpawnInterval(1.f), maxSpawnInterval(5.f)
+	minSpawnInterval(1.f), maxSpawnInterval(5.f),
+	playerPositionHolder({0.f,0.f})
 {
 	itemManager = ItemManager();
 }
@@ -75,6 +76,9 @@ void EntityManager::update(float dt) {
 		GameStateManager::getInstance().setState(GameStateManager::State::GameOver);
 		return;
 	}
+	playerPositionHolder = player->getPosition();
+	itemManager.update(dt, playerPositionHolder);
+
 	// spawn Enemies
 	spawnEnemies(dt, town);
 	// update all entites
@@ -109,9 +113,6 @@ void EntityManager::update(float dt) {
 				score++;
 			}
 			it = allEntities.erase(it);   // deletes shared_ptr
-
-
-
 		}
 		else {
 			++it;

@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include "Camera.hpp"
 
 Camera::Camera(sf::RenderWindow& window, float width, float height) 
     : renderWindow(window), cameraView(sf::FloatRect({0.f, 0.f} , {width, height})), cameraDeadzone(200.f)
