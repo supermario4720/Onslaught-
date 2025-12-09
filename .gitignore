@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#CMake related files for VSCode on macbook
+build
+CMakeLists.txt
