@@ -1,0 +1,40 @@
+Type IDs:
+0 -> Town
+1 -> Player
+2 -> Enemy
+	* may add more types to enemies
+3 -> Object
+	* may add more types to objects
+
+Factions:
+0 -> Player Faction (ally)
+1 -> Enemy Faction (enemy)
+2 -> Neutral (objects, etc)
+
+	* neutral faction members could be damaged by player and enemy
+		* maybe can also damage player and enemy?
+
+Assets used:
+プレイヤーキャラクター
+https://trevor-pupkin.itch.io/minimal-dungeon
+敵キャラクター
+https://snoblin.itch.io/pixel-rpg-skeleton-free
+建物、ボタンなど
+https://pixelfrog-assets.itch.io/tiny-swords
+音
+https://leohpaz.itch.io/minifantasy-dungeon-sfx-pack
+
+
+
+
+Asset candidates:
+https://game-endeavor.itch.io/mystic-woods
+# Free version ONLY FOR NON-COMMERCIAL USE
+
+https://krishna-palacio.itch.io/minifantasy-creatures
+
+https://boogiebalrog.itch.io/doodle-rpg-asset-pack
+
+
+
+https://kevins-moms-house.itch.io/dungeonsprites
