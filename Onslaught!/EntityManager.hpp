@@ -2,6 +2,7 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "ItemManager.hpp"
+#include "InventoryManager.hpp"
 #include <vector>
 #include <memory>
 #include <string>
@@ -17,6 +18,7 @@ private:
 	sf::RenderWindow* window = nullptr;
 
 	ItemManager itemManager;
+	InventoryManager playerInventory;
 
 	std::vector<std::shared_ptr<Entity>> allEntities;
 	std::weak_ptr<Player> playerPtr;

@@ -1,6 +1,7 @@
 #pragma once
 #include "Item.hpp"
 #include "ItemData.hpp"
+#include "InventoryManager.hpp"
 #include <vector>
 #include <iostream>
 
@@ -14,7 +15,7 @@ public:
         items.push_back(newItem);
     }
 
-    void update(float dt, sf::Vector2f playerPos) {
+    void update(float dt, sf::Vector2f playerPos, InventoryManager& playerInventory) {
         for (auto& item : items) {
             item -> update(dt, playerPos);
         }
@@ -24,13 +25,14 @@ public:
             if ((*it)->isPickable()) {
                 // ADD ITEM TO INVENTORY FIRST
                 //
-                //
-                //
-                std::cout << "Picked" << std::endl;
-                it = items.erase(it);
+                int newQty = playerInventory.addItem((*it)->getItemID(), (*it)->getQuantity());
+                (*it)->setQuantity(newQty);
+                
+                if ( (*it)->isExpired() ) {
+                    it = items.erase(it);
+                }
             }
             else if ((*it)->isExpired()) {
-                std::cout << "Expired" << std::endl;
                 it = items.erase(it);
             }
             else {

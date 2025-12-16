@@ -37,5 +37,9 @@ public:
 
     const std::string& name() const;
 
+    int getQuantity() const;
+
+    void setQuantity(int newqty);
+
     ItemID getItemID() const;
 };

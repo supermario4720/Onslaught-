@@ -17,6 +17,7 @@ EntityManager::EntityManager()
 	playerPositionHolder({0.f,0.f})
 {
 	itemManager = ItemManager();
+	playerInventory = InventoryManager();
 }
 
 EntityManager& EntityManager::getInstance() {
@@ -36,6 +37,7 @@ void EntityManager::reset() {
 	allEntities.clear();
 	CollisionManager::getInstance().clear();
 	itemManager.reset();
+	playerInventory.reset();
 	nextEntityID = 0;
 	enemyCount = 0;
 	score = 0;
@@ -77,7 +79,7 @@ void EntityManager::update(float dt) {
 		return;
 	}
 	playerPositionHolder = player->getPosition();
-	itemManager.update(dt, playerPositionHolder);
+	itemManager.update(dt, playerPositionHolder, playerInventory);
 
 	// spawn Enemies
 	spawnEnemies(dt, town);

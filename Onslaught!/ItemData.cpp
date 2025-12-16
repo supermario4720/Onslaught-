@@ -22,6 +22,14 @@ const ItemData& ItemDatabase::get(ItemID id) {
 
 const std::unordered_map<ItemID, ItemData>& ItemDatabase::getMap() {
     static const std::unordered_map<ItemID, ItemData> map = {
+        { ItemID::None, {
+            "None",
+            "No Description",
+            "items/placeholder.png",
+            false,
+            1
+        }},
+
         { ItemID::Wood, {
             "Wood",
             "Basic material for construction.",

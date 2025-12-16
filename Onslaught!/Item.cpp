@@ -69,3 +69,14 @@ const std::string& Item::name() const {
 ItemID Item::getItemID() const {
     return id;
 }
+
+int Item::getQuantity() const {
+    return quantity;
+}
+
+void Item::setQuantity(int newqty) {
+    quantity = newqty;
+    if(quantity <= 0) {
+        expired = true;
+    }
+}
