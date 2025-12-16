@@ -2,8 +2,6 @@
 #include <string>
 #include <cstdint>
 #include <unordered_map>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include "ItemID.hpp"
 
 // FIX ITEM PATHS IN MAP

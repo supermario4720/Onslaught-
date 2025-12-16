@@ -30,7 +30,7 @@ int InventoryManager::addItem(ItemID id, int amount) {
             }
         }
     }
-    // if items are still remaining, add them to new stack
+    // if items are still remaining and unstackable, add them to new stack
     for(auto& slot : inventory) {
         if(remaining == 0) break;
         if (!slot.isFull) {

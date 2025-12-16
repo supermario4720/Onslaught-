@@ -1,11 +1,11 @@
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <string>
 #include <unordered_map>
 
-class ItemTextures {
+class BuildingTextures {
 public:
-    static ItemTextures& getInstance() {
-        static ItemTextures instance;
+    static BuildingTextures& getInstance() {
+        static BuildingTextures instance;
         return instance;
     }
 
@@ -22,7 +22,7 @@ public:
 private:
     std::unordered_map<std::string, sf::Texture> textures;
 
-    ItemTextures() = default;
-    ItemTextures(const ItemTextures&) = delete;
-    ItemTextures& operator=(const ItemTextures&) = delete;
+    BuildingTextures() = default;
+    BuildingTextures(const BuildingTextures&) = delete;
+    BuildingTextures& operator=(const BuildingTextures&) = delete;
 };

@@ -25,6 +25,7 @@
 #include "EntityManager.hpp"
 #include "ButtonTextureLoader.hpp"
 #include "ItemTextures.hpp"
+#include "BuildingTextures.hpp"
 
 #include <vector>
 #include <iostream>
@@ -35,6 +36,7 @@ int main() {
     AudioManager::getInstance().loadAllSounds();
     ButtonTextureLoader::getInstance().loadAllTextures();
     ItemTextures::getInstance().loadAllTextures();
+    BuildingTextures::getInstance().loadAllTextures();
     // play noise at start so SFML loads sound properly
     AudioManager::getInstance().play("ButtonClick", 0.f);
 
@@ -251,6 +253,8 @@ int main() {
     }
     AudioManager::getInstance().clearManager();
     ButtonTextureLoader::getInstance().clearManager();
+    ItemTextures::getInstance().clearManager();
+    BuildingTextures::getInstance().clearManager();
     entityManager.reset();
     return 0;
 }

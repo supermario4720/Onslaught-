@@ -3,7 +3,8 @@
 
 
 Item::Item(ItemID _id, const sf::Vector2f& pos, int qty)
-    : id(_id), quantity(qty), position(pos), sprite(ItemTextures::getInstance().getTexture("temp"))
+    : id(_id), quantity(qty), position(pos), 
+    sprite(ItemTextures::getInstance().getTexture( ItemDatabase::get(_id).itemTextureName ))
 {
     auto bounds = sprite.getLocalBounds();
     sprite.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
