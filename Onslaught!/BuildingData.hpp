@@ -15,10 +15,10 @@ struct BuildingCost {
 struct BuildingData {
     std::string name;
     std::string description;
-    std::string buildingTextureName;
+    std::string texture;
     std::vector<BuildingCost> buildCost;
 
-    float heatlh;
+    float health;
 };
 
 class BuildingDatabase {

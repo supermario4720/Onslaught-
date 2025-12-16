@@ -6,6 +6,9 @@
 #include "Enemy.hpp"
 #include "Object.hpp"
 #include "Town.hpp"
+
+#include "Building.hpp"
+
 #include "CollisionManager.hpp"
 #include "GameStateManager.hpp"
 

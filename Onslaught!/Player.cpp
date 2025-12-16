@@ -1,5 +1,4 @@
 #include "Player.hpp"
-#include "Hitbox.hpp"
 #include "CollisionManager.hpp"
 #include "AudioManager.hpp"
 #include <iostream>

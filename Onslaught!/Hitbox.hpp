@@ -21,9 +21,9 @@ protected:
 public:
 	std::weak_ptr<Entity> hitboxOwner;
 	// rectangle hitbox constructor
-	Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, sf::Vector2f size, int faction = 0, bool _isVisible = false);
+	Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, sf::Vector2f size, int _faction = 0, bool _isVisible = false);
 	// circle hitbox constructor
-	Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, float r, int faction = 0, bool _isVisible = false);
+	Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, float r, int _faction = 0, bool _isVisible = false);
 
 	virtual ~Hitbox() = default;
 
