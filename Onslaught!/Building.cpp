@@ -5,9 +5,17 @@
 
 
 Building::Building(BuildingID id, sf::Vector2f pos, int _faction)
-: Entity( BuildingDatabase::get(id).health ), buildingID(id), position(pos), faction(_faction),
+: Entity( BuildingDatabase::get(id).health ), buildingID(id), position(pos), faction(_faction), expired(false),
 sprite( BuildingTextures::getInstance().getTexture( BuildingDatabase::get(id).texture ) )
-{}
+{
+	sf::Vector2f spriteSize = sprite.getGlobalBounds().size;
+    sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
+	float scale = (80.f / spriteSize.x);
+	sprite.setScale({scale, scale});
+    sprite.setPosition(pos);
+
+	changeInvincibility(0.5f);
+}
 
 std::shared_ptr<Building> Building::create(BuildingID id, sf::Vector2f pos, int _faction) {
     std::shared_ptr<Building> building = std::make_shared<Building>(id, pos, _faction);
@@ -49,4 +57,13 @@ void Building::update(float dt) {
 	if (fromCollision > 0.1f) {
 		sprite.setColor(sf::Color(255,255,255,255));
 	}
+}
+
+void Building::render(sf::RenderWindow& window) {
+    window.draw(sprite);
+}
+
+bool Building::isExpired() const {
+	// not returning expired, because there is nothing between alive and expired yet
+	return isAlive;
 }

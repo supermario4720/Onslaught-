@@ -139,7 +139,7 @@ int main() {
                 }
 
                 // update game state
-                entityManager.update(dt);
+                entityManager.update(dt, window);
                 collisionManager.update(dt);
                 gameScreen.update(dt, window);
                 camera.follow(entityManager.getPlayerPos());

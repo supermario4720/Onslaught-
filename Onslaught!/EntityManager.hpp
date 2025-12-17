@@ -3,6 +3,8 @@
 #include <SFML/System/Vector2.hpp>
 #include "ItemManager.hpp"
 #include "InventoryManager.hpp"
+#include "BuildingManager.hpp"
+#include "BuildingID.hpp"
 #include <vector>
 #include <memory>
 #include <string>
@@ -11,6 +13,7 @@ class Entity;
 class Camera;
 class Player;
 class Town;
+class Building;
 
 class EntityManager {
 private:
@@ -18,10 +21,12 @@ private:
 	sf::RenderWindow* window = nullptr;
 
 	ItemManager itemManager;
+	BuildingManager buildManager;
 	InventoryManager playerInventory;
 
 	std::vector<std::shared_ptr<Entity>> allEntities;
-	std::weak_ptr<Player> playerPtr;
+	std::vector<std::shared_ptr<Building>> buildings;
+	std::shared_ptr<Player> player;
 	std::weak_ptr<Town> townPtr;
 	Camera* camera = nullptr;
 
@@ -52,7 +57,7 @@ public:
 
 	void start(Camera* cam);
 
-	void update(float dt);
+	void update(float dt, sf::RenderWindow& _window);
 
 	void spawnEnemies(float dt, std::shared_ptr<Town>& town);
 
@@ -67,6 +72,8 @@ public:
 	bool isTownOnSpawnPos(sf::Vector2f spawnPos, std::shared_ptr<Town>& town);
 
 	void spawnItems(ItemID id, const sf::Vector2f& pos, int qty);
+
+	void createBuilding(BuildingID id, sf::Vector2f& pos, int _faction);
 
 	int getScore() const;
 	float getTime() const;

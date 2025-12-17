@@ -1,6 +1,8 @@
 #include "Player.hpp"
 #include "CollisionManager.hpp"
+#include "InputManager.hpp"
 #include "AudioManager.hpp"
+#include "BuildingManager.hpp"
 #include <iostream>
 
 Player::Player()
@@ -94,27 +96,28 @@ void Player::initializePtr(std::shared_ptr<Player> ptr) {
 
 
 // Handle input by using booleans -> for each button used, check if clicked, then turn respective boolean to true
-void Player::handleInput() {
+void Player::handleInput(BuildingManager& buildManager) {
     movementVector = { 0.f, 0.f };
+    InputManager& input = InputManager::getInstance();
     // for when using keyboard control scheme
     if (keyboardInput) {
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)
-            || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))  movementVector.x -= 1.f;
+        if (input.isKeyDown(sf::Keyboard::Key::Left)
+            || input.isKeyDown(sf::Keyboard::Key::A))  movementVector.x -= 1.f;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)
-            || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))  movementVector.x += 1.f;
+        if (input.isKeyDown(sf::Keyboard::Key::Right)
+            || input.isKeyDown(sf::Keyboard::Key::D))  movementVector.x += 1.f;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)
-            || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))  movementVector.y -= 1.f;
+        if (input.isKeyDown(sf::Keyboard::Key::Up)
+            || input.isKeyDown(sf::Keyboard::Key::W))  movementVector.y -= 1.f;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)
-            || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))  movementVector.y += 1.f;
+        if (input.isKeyDown(sf::Keyboard::Key::Down)
+            || input.isKeyDown(sf::Keyboard::Key::S))  movementVector.y += 1.f;
 
         updateAnimationState(movementVector);
 
         // check if button being held -> prevents attack from spamming when button held
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) ) {
+        if (input.isKeyDown(sf::Keyboard::Key::Space) || input.isKeyDown(sf::Keyboard::Key::Enter) ) {
             if (!attackOnCD && !attackHeld && currentStamina > 10.f) {
                 onAttack();
                 currentStamina -= 10.f;
@@ -124,7 +127,7 @@ void Player::handleInput() {
         else { attackHeld = false;  }
 
         // sprint -> if button pressed, make player move 1.5 times faster
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+        if (input.isKeyDown(sf::Keyboard::Key::LShift)) {
             if (currentStamina > 0.3f) {
                 speed = initialSpeed * 1.5f;
                 currentStamina -= 0.3f;
@@ -141,10 +144,18 @@ void Player::handleInput() {
             dashing = false;
             speed = initialSpeed;
         }
+
+        if (input.isKeyPressed(sf::Keyboard::Key::B)) {
+            buildManager.toggleBuildMode();
+        }
     }
 }
 
 void Player::update(float deltaTime) {
+    fromCollision += deltaTime;
+}
+
+void Player::updatePlayer(float dt, BuildingManager& buildManager) {
     if (!isAlive) {
         std::cout << isAlive << std::endl;
         return;
@@ -159,13 +170,13 @@ void Player::update(float deltaTime) {
             targetState != AnimationController::State::Hurt &&
             targetState != AnimationController::State::Death));
         // true until animation is over
-        isAlive = !animations.update(deltaTime);
+        isAlive = !animations.update(dt);
         animations.applyToSprite(sprite);
         return;
     }
 
     // update inputs
-    handleInput();
+    handleInput(buildManager);
     //std::cout << movementVector.x << ", " << movementVector.y << std::endl;
 
     // Normalize vector if non zero and multiply by movement speed
@@ -174,7 +185,7 @@ void Player::update(float deltaTime) {
         movementVector = movementVector.normalized() * speed;
     }
 
-    movementVector *= deltaTime;
+    movementVector *= dt;
     
     if (movementVector.x != 0.f || movementVector.y != 0.f) {
         audio.play("playerWalkFootstep", false, 20.f);
@@ -216,14 +227,6 @@ void Player::update(float deltaTime) {
         // if hitbox type is circle 
         else if (hitbox-> getType() == 1) {
             const sf::CircleShape& circle = hitbox-> getCircleHitbox();
-            /*
-            if ( CollisionManager::checkCircleCollision(movedShapeX, circle ) ) {
-                movementVector.x = 0.f;
-            }
-            if (CollisionManager::checkCircleCollision(movedShapeY, circle) ) {
-                movementVector.y = 0.f;
-            }
-            */
             movementVector = CollisionManager::slideAgainstCircle(shape, circle, movementVector);
         }
         entityIteration++;
@@ -252,7 +255,7 @@ void Player::update(float deltaTime) {
         }
     }
 
-    animations.update(deltaTime);
+    animations.update(dt);
     animations.applyToSprite(sprite);
     // change left or right direction
     if (facingLeft) {
@@ -274,7 +277,7 @@ void Player::update(float deltaTime) {
     // update attack boxes
     for (auto attack = activeAttacks.begin(); attack != activeAttacks.end(); ) {
         // it is only pointer, must get value of ptr with (*ptr)
-        (*attack)->updateTriggerHitbox(deltaTime, getPosition(), facing);
+        (*attack)->updateTriggerHitbox(dt, getPosition(), facing);
 
         if ((*attack)->isExpired()) {
             attack = activeAttacks.erase(attack);
@@ -284,8 +287,9 @@ void Player::update(float deltaTime) {
             ++attack;
         }
     }
+
     // modify collision timer, collision effect
-    if (fromCollision < 3.0f) fromCollision += deltaTime;
+    if (fromCollision < 3.0f) fromCollision += dt;
     else {
         //replace 0.05f with regen speed
         if (health + 0.02f > maxHealth) health = maxHealth;

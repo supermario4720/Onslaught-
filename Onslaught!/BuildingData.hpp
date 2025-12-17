@@ -3,7 +3,6 @@
 #include <vector>
 #include <unordered_map>
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include "BuildingID.hpp"
 #include "ItemID.hpp"
 
@@ -17,6 +16,7 @@ struct BuildingData {
     std::string description;
     std::string texture;
     std::vector<BuildingCost> buildCost;
+    sf::Vector2f size;
 
     float health;
 };

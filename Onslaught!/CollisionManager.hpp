@@ -4,16 +4,11 @@
 #include <vector>
 #include "Hitbox.hpp"
 
-// static variables in classes are owned by the class itself
-//	-> it doesnt need an instance to exist, so it can be called directly
-//		(e.g. Class::varName; )
 
 class CollisionManager {
 private:
-	// list of hitboxes that CANNOT overlap (for moving entities to check if destination is free or not)
+	// contains hitboxes that can't overlap (blocking hitboxes)
 	std::vector<std::weak_ptr<Hitbox>> entityHitboxes;
-	// vector list of trigger hitboxes
-	// std::vector<std::weak_ptr<TriggerHitbox>>triggerHitboxes;
 
 public:
 	static CollisionManager& getInstance();
@@ -47,6 +42,11 @@ public:
 	static bool checkCircleRectCollision(const sf::CircleShape& circle, const sf::RectangleShape& rect);
 
 	static sf::Vector2f slideAgainstCircle(sf::CircleShape& self, const sf::CircleShape& target, sf::Vector2f movementVector);
+
+	// check if shape collides with any entity
+	bool checkAllCollision(sf::CircleShape& self);
+	// check if shape collides with any entity
+	bool checkAllCollision(sf::RectangleShape& self);
 
 	//static void handleCollision(Player& player, std::vector<sf::RectangleShape> objects);
 

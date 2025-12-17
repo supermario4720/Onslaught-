@@ -5,6 +5,7 @@
 #include "Entity.hpp"
 #include "AnimationController.hpp"
 
+class BuildingManager;
 
 class Player : public Entity {
 private:
@@ -51,6 +52,8 @@ private:
     bool dashing = false;
     bool dashHeld = false;
 
+    bool build = false;
+
 public:
     Player();
     ~Player();
@@ -58,8 +61,10 @@ public:
     void initializeHitbox() override;
     void initializePtr(std::shared_ptr<Player>);
 
-    void handleInput();
+    void handleInput(BuildingManager& buildManager);
     void update(float deltaTime) override;
+    // created player exclusive update function because it would need different parameters
+    void updatePlayer(float dt, BuildingManager& buildManager);
     void onCollision(float damage) override;
     void render(sf::RenderWindow& window) override;
     float getDirection() override;

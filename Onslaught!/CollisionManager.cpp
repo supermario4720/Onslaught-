@@ -123,6 +123,57 @@ sf::Vector2f CollisionManager::slideAgainstCircle(sf::CircleShape& self, const s
 	return modifiedMoveVector;
 }
 
+// Check if shape is colliding with any entity
+bool CollisionManager::checkAllCollision(sf::CircleShape& self) {
+	bool isColliding = false;
+
+	for (auto entityIteration = entityHitboxes.begin(); entityIteration != entityHitboxes.end();) {
+		// skip expired
+		if (entityIteration->expired()) {
+			++entityIteration;
+			continue;
+		}
+
+		auto entityHB = entityIteration->lock();
+		if (entityHB->getType() == 0) {
+			isColliding = CollisionManager::checkCircleRectCollision(self, entityHB->getRectHitbox());
+		}
+		else if (entityHB->getType() == 1) {
+			isColliding = CollisionManager::checkCircleCollision(self, entityHB->getCircleHitbox());
+		}
+		// if true, return and end function
+		if(isColliding) return isColliding;
+		++entityIteration;
+	}
+	return isColliding;
+}
+
+bool CollisionManager::checkAllCollision(sf::RectangleShape& self) {
+	bool isColliding = false;
+
+	for (auto entityIteration = entityHitboxes.begin(); entityIteration != entityHitboxes.end();) {
+		// skip expired
+		if (entityIteration->expired()) {
+			++entityIteration;
+			continue;
+		}
+
+		auto entityHB = entityIteration->lock();
+		if (entityHB->getType() == 0) {
+			if( self.getGlobalBounds().findIntersection(entityHB->getRectHitbox().getGlobalBounds()) ) {
+				return true;
+			}
+		}
+		else if (entityHB->getType() == 1) {
+			isColliding = CollisionManager::checkCircleRectCollision( entityHB->getCircleHitbox(), self );
+		}
+		// if true, return and end function
+		if(isColliding) return isColliding;
+		++entityIteration;
+	}
+	return isColliding;
+}
+
 
 void CollisionManager::clear() {
 	entityHitboxes.clear();

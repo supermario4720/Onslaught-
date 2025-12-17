@@ -18,6 +18,7 @@ private:
     sf::Sprite sprite;
 
     int faction;
+    bool expired;
 
 
 public:
@@ -32,6 +33,10 @@ public:
 	void onCollision(float damage) override;
 
     void update(float dt) override;
+
+    void render(sf::RenderWindow& window) override;
+
+    bool isExpired() const;
 
 
 };

@@ -20,6 +20,7 @@ EntityManager::EntityManager()
 	playerPositionHolder({0.f,0.f})
 {
 	itemManager = ItemManager();
+	buildManager = BuildingManager();
 	playerInventory = InventoryManager();
 }
 
@@ -40,6 +41,7 @@ void EntityManager::reset() {
 	allEntities.clear();
 	CollisionManager::getInstance().clear();
 	itemManager.reset();
+	buildManager.reset();
 	playerInventory.reset();
 	nextEntityID = 0;
 	enemyCount = 0;
@@ -53,12 +55,12 @@ void EntityManager::start(Camera* cam) {
 	reset();
 	std::shared_ptr<Town> town = Town::createTown();
 	town->setEntityID(0);
-	std::shared_ptr<Player> player = Player::create();
+	townPtr = town;
+
+	player = Player::create();
 	player->setEntityID(1);
 	nextEntityID = 2;
 
-	townPtr = town;
-	playerPtr = player;
 	allEntities.push_back(town);
 	allEntities.push_back(player);
 	playerAlive = true;
@@ -66,8 +68,7 @@ void EntityManager::start(Camera* cam) {
 	setCamera(cam);
 }
 
-void EntityManager::update(float dt) {
-	auto player = playerPtr.lock();
+void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	auto town = townPtr.lock();
 
 	// if player or town doesn't exist or is not alive, return
@@ -83,10 +84,12 @@ void EntityManager::update(float dt) {
 	}
 	playerPositionHolder = player->getPosition();
 	itemManager.update(dt, playerPositionHolder, playerInventory);
+	buildManager.update(dt, playerPositionHolder, playerInventory, _window);
 
 	// spawn Enemies
 	spawnEnemies(dt, town);
 	// update all entites
+	player->updatePlayer(dt, buildManager);
 	for (auto& ent : allEntities) {
 		ent->update(dt);
 	}
@@ -151,12 +154,16 @@ void EntityManager::renderAlive(sf::RenderWindow& _window) {
 	for (auto& ent : allEntities) {
 		ent->render(_window);
 	}
+	for (auto& building : buildings) {
+		building->render(_window);
+	}
+
 	itemManager.render(_window);
+	buildManager.render(_window);
 }
 
 sf::Vector2f EntityManager::getPlayerPos() {
 	// if player ptr is null/empty
-	auto player = playerPtr.lock();
 	if (!player) {
 		std::cout << "Player doesn't exist!" << std::endl;
 		return { 0.f, 0.f };
@@ -267,7 +274,6 @@ bool EntityManager::isTownAlive() const {
 }
 
 sf::Vector2f EntityManager::getPlayerHealth() {
-	auto player = playerPtr.lock();
 	if (!player) {
 		std::cout << "Player doesn't exist!" << std::endl;
 		return { 0.f, 1.f };
@@ -279,7 +285,6 @@ sf::Vector2f EntityManager::getPlayerHealth() {
 
 
 sf::Vector2f EntityManager::getPlayerStamina() {
-	auto player = playerPtr.lock();
 	if (!player) {
 		std::cout << "Player doesn't exist!" << std::endl;
 		return { 0.f, 1.f };
@@ -291,4 +296,8 @@ sf::Vector2f EntityManager::getPlayerStamina() {
 
 void EntityManager::spawnItems(ItemID id, const sf::Vector2f& pos, int qty) {
 	itemManager.spawn(id, pos, qty);
+}
+
+void EntityManager::createBuilding(BuildingID id, sf::Vector2f& pos, int _faction) {
+	buildings.push_back( Building::create(id, pos, _faction) );
 }
