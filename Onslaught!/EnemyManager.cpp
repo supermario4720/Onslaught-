@@ -114,11 +114,11 @@ sf::Vector2f EnemyManager::randomSpawnPosition() {
 	return bestCorner;
 }
 
-void EnemyManager::update(float dt) {
+void EnemyManager::update(float dt, const BuildingManager& buildManager) {
     spawnEnemy(dt);
 
     for (auto& enemy : enemies) {
-		enemy->update(dt);
+		enemy->update(dt, buildManager);
 	}
 
 	for (auto it = enemies.begin(); it != enemies.end(); ) {

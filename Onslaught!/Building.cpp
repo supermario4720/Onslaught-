@@ -73,3 +73,7 @@ bool Building::isExpired() const {
 	// not returning expired, because there is nothing between alive and expired yet
 	return !isAlive;
 }
+
+sf::Vector2f Building::getPosition() const {
+	return position;
+}

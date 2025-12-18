@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class Camera;
+class BuildManager;
 
 class EnemyManager {
 public:
@@ -19,7 +20,7 @@ public:
 
 	sf::Vector2f randomSpawnPosition();
 
-    void update(float dt);
+    void update(float dt, const BuildingManager& buildManager);
 
     void render(sf::RenderWindow& window);
 

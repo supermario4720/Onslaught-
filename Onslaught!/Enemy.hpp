@@ -6,6 +6,7 @@
 #include "AnimationController.hpp"
 
 class EntityManager;
+class BuildingManager;
 
 class Enemy : public Entity {
 private:
@@ -34,6 +35,7 @@ private:
 
 	float movementSpeed;
 	float size;
+	float detectionRadius;
 
 	bool isAttacking;
 	bool isTakingDamage;
@@ -57,6 +59,7 @@ public:
 	void onDeath() override;
 
 	void update(float dt) override;
+	virtual void update(float dt, const BuildingManager& buildManager);
 
 	void render(sf::RenderWindow& window) override;
 
@@ -67,4 +70,6 @@ public:
 	void updateAnimationState(sf::Vector2f moveVec);
 
 	void calculateKnockback();
+
+	sf::Vector2f chooseTarget(const BuildingManager& buildManager);
 };

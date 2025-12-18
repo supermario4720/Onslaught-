@@ -115,3 +115,7 @@ void BuildingManager::reset() {
     bounds.setOrigin( buildingSize/2.f );
     bounds.setFillColor( sf::Color(100, 255, 100, 155) );
 }
+
+const std::vector<std::shared_ptr<Building>>& BuildingManager::getBuildingList() const {
+    return buildings;
+}

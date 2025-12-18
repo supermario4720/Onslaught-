@@ -99,7 +99,7 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	playerPositionHolder = player->getPosition();
 	itemManager.update(dt, playerPositionHolder, playerInventory);
 	buildManager.update(dt, playerPositionHolder, playerInventory, enemyManager, _window);
-	enemyManager.update(dt);
+	enemyManager.update(dt, buildManager);
 
 	// update all entites
 	player->updatePlayer(dt, buildManager);

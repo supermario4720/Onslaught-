@@ -42,5 +42,6 @@ public:
 
     bool isExpired() const;
 
+    sf::Vector2f getPosition() const;
 
 };

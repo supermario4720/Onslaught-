@@ -2,13 +2,15 @@
 #include "Enemy.hpp"
 #include "CollisionManager.hpp"
 #include "EntityManager.hpp"
+#include "BuildingManager.hpp"
+#include "Building.hpp"
 #include "AudioManager.hpp"
 #include <iostream>
 
 
 Enemy::Enemy(sf::Vector2f initPos, float enemySize, float speed)
     :Entity(100.f), size(enemySize), movementSpeed(speed), entityManager(EntityManager::getInstance()),
-    spriteSheet("resources/skeleton.png"), sprite(spriteSheet)
+    spriteSheet("resources/skeleton.png"), sprite(spriteSheet), detectionRadius(150.f)
 {
     // setting corresponding IDs
     setTypeID(2);
@@ -97,6 +99,9 @@ void Enemy::initializePtr(std::shared_ptr<Enemy> ptr) {
 
 
 void Enemy::update(float dt) {
+}
+
+void Enemy::update(float dt, const BuildingManager& buildManager) {
     if (!isAlive) {
         return;
     }
@@ -117,8 +122,8 @@ void Enemy::update(float dt) {
     }
  
     // check player position from manager instance
-    sf::Vector2f playerPos = entityManager.getPlayerPos();
-    movementVector = playerPos - getPosition();
+    sf::Vector2f targetPos = chooseTarget(buildManager);
+    movementVector = targetPos - getPosition();
 
     // turn to unit vector, then multiply by speed
     if (movementVector.x != 0.f || movementVector.y != 0.f) {
@@ -357,4 +362,48 @@ void Enemy::calculateKnockback() {
     sf::Vector2f facingVec( { std::cos(facingAngle), std::sin(facingAngle) } );
     knockbackVector = -facingVec * movementSpeed * 3.f;
 
+}
+
+sf::Vector2f Enemy::chooseTarget(const BuildingManager& buildManager) {
+    sf::Vector2f playerPos = entityManager.getPlayerPos();
+    sf::Vector2f thisPos = getPosition();
+    sf::Vector2f distVec = playerPos - thisPos;
+    float dist = detectionRadius - 1.f;
+
+    if(distVec.x != 0 || distVec.y != 0) {
+        dist = distVec.length();
+    }
+    // if player distance within radius, return player position
+    if(dist < detectionRadius) return playerPos;
+
+    // check if town within radius next
+    sf::Vector2f townPos = {0.f, 0.f};
+    distVec = townPos - thisPos;
+    if(distVec.x != 0 || distVec.y != 0) dist = distVec.length();
+    if(dist < detectionRadius) {
+        return townPos;
+    }
+
+    sf::Vector2f buildingPos({0.f, 0.f});
+    sf::Vector2f targetPos({0.f, 0.f});
+    float buildDist = dist;
+    
+    const auto& buildings = buildManager.getBuildingList();
+    for (auto& building : buildings) {
+
+        buildingPos = building->getPosition();
+        distVec = buildingPos - thisPos;
+
+        if(distVec.x != 0 || distVec.y != 0) buildDist = distVec.length();
+        if(buildDist < detectionRadius) {
+            if(buildDist < dist) dist = buildDist;
+            targetPos = buildingPos;
+        }
+    }
+    if(dist < detectionRadius) {
+        return targetPos;
+    }
+
+    return townPos;
+    
 }

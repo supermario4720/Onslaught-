@@ -26,6 +26,8 @@ public:
 
     void reset();
 
+    const std::vector<std::shared_ptr<Building>>& getBuildingList() const;
+
 private:
     std::vector<std::shared_ptr<Building>> buildings;
     sf::Vector2f mousePos;
