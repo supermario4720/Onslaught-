@@ -10,6 +10,10 @@ ArcherTower::ArcherTower(BuildingID id, sf::Vector2f pos, int faction)
 {
 }
 
+ArcherTower::~ArcherTower(){
+    arrows.clear();
+}
+
 std::shared_ptr<ArcherTower> ArcherTower::create(BuildingID id, sf::Vector2f pos, int faction)
 {
     std::shared_ptr<ArcherTower> tower = std::make_shared<ArcherTower>(id, pos, faction);
@@ -127,6 +131,8 @@ void ArcherTower::updateArrows(float dt, EnemyManager& enemyManager) {
         if (hit) {
             arrow.alive = false;
         }
+        arrow.lifetime += dt;
+        if(arrow.lifetime > arrow.maxLifetime) arrow.alive = false;
     }
 
     arrows.erase(
