@@ -60,7 +60,9 @@ public:
 
 	void render(sf::RenderWindow& window) override;
 
-	sf::Vector2f getPosition();
+	sf::Vector2f getPosition() const;
+
+	const std::weak_ptr<Hitbox> getHitbox() const;
 
 	void updateAnimationState(sf::Vector2f moveVec);
 

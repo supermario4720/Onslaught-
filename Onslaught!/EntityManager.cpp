@@ -14,14 +14,12 @@
 
 
 EntityManager::EntityManager()
-	: nextEntityID(0), enemyCount(0), maxEnemies(10), 
-	spawnTimer(0.f), nextInterval(1.f), 
-	minSpawnInterval(1.f), maxSpawnInterval(5.f),
-	playerPositionHolder({0.f,0.f})
+	: nextEntityID(0), playerPositionHolder({0.f,0.f})
 {
 	itemManager = ItemManager();
 	buildManager = BuildingManager();
 	playerInventory = InventoryManager(7);
+	enemyManager = EnemyManager();
 }
 
 EntityManager& EntityManager::getInstance() {
@@ -35,16 +33,17 @@ void EntityManager::setWindow(sf::RenderWindow* _window) {
 
 void EntityManager::setCamera(Camera* cam) {
 	camera = cam;
+	enemyManager.setCamera(cam);
 }
 
 void EntityManager::reset() {
 	allEntities.clear();
 	CollisionManager::getInstance().clear();
+	enemyManager.reset();
 	itemManager.reset();
 	buildManager.reset();
 	playerInventory.reset();
 	nextEntityID = 0;
-	enemyCount = 0;
 	score = 0;
 	gameTime = 0.f;
 	playerAlive = false;
@@ -99,10 +98,9 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	}
 	playerPositionHolder = player->getPosition();
 	itemManager.update(dt, playerPositionHolder, playerInventory);
-	buildManager.update(dt, playerPositionHolder, playerInventory, _window);
+	buildManager.update(dt, playerPositionHolder, playerInventory, enemyManager, _window);
+	enemyManager.update(dt);
 
-	// spawn Enemies
-	spawnEnemies(dt, town);
 	// update all entites
 	player->updatePlayer(dt, buildManager);
 	for (auto& ent : allEntities) {
@@ -131,10 +129,6 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 
 	for (auto it = allEntities.begin(); it != allEntities.end(); ) {
 		if (!(*it)->checkAlive()) {
-			if( (*it)->getFaction() == 1) {
-				enemyCount--;
-				score++;
-			}
 			it = allEntities.erase(it);   // deletes shared_ptr
 		}
 		else {
@@ -144,37 +138,17 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	gameTime += dt;
 }
 
-void EntityManager::spawnEnemies(float dt, std::shared_ptr<Town>& town) {
-	// spawn enemy at random interval if below 10
-	if (enemyCount < maxEnemies) {
-		if (spawnTimer < nextInterval) {
-			spawnTimer += dt;
-		}
-		else {
-			sf::Vector2f pos = randomSpawnPosition((*camera).getView(), town);
-			std::shared_ptr<Enemy> newEnemy = Enemy::create(pos);
-			newEnemy->setEntityID(nextEntityID);
-			nextEntityID++;
-			allEntities.push_back(newEnemy);
-
-			nextInterval = randf(minSpawnInterval, maxSpawnInterval);
-			spawnTimer = 0.f;
-			enemyCount++;
-		}
-	}
-}
-
 // must be called after updates
 void EntityManager::renderAlive(sf::RenderWindow& _window) {
 	for (auto& ent : allEntities) {
 		ent->render(_window);
 	}
-
+	enemyManager.render(_window);
 	itemManager.render(_window);
 	buildManager.render(_window);
 }
 
-sf::Vector2f EntityManager::getPlayerPos() {
+sf::Vector2f EntityManager::getPlayerPos() const {
 	// if player ptr is null/empty
 	if (!player) {
 		std::cout << "Player doesn't exist!" << std::endl;
@@ -186,91 +160,13 @@ sf::Vector2f EntityManager::getPlayerPos() {
 	}
 }
 
-float EntityManager::randf(float min, float max) {
-	return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
-}
-
-sf::Vector2f EntityManager::randomSpawnPosition(const sf::View& camera, std::shared_ptr<Town>& town) {
-	sf::Vector2f viewPos = camera.getCenter();
-	sf::Vector2f viewSize = camera.getSize();
-	float marginSize = 50.f;
-
-	float left = viewPos.x - viewSize.x * 0.5f - marginSize;
-	float right = viewPos.x + viewSize.x * 0.5f + marginSize;
-	float top = viewPos.y - viewSize.y * 0.5f - marginSize;
-	float bottom = viewPos.y + viewSize.y * 0.5f + marginSize;
-
-	int attempts = 0;
-	while (attempts < 15) {
-		int side = rand() % 4;
-		sf::Vector2f spawnPosition;
-
-		switch (side)
-		{
-			case 0: // left side
-				spawnPosition = { left, randf(top, bottom) };
-				break;
-
-			case 1: // right side
-				spawnPosition = { right, randf(top, bottom) };
-				break;
-
-			case 2: // top
-				spawnPosition = { randf(left, right), top };
-				break;
-			case 3: // bottom
-			default:
-				spawnPosition = { randf(left, right), bottom };
-				break;
-		}
-
-		if (!isTownOnSpawnPos(spawnPosition, town)) {
-			return spawnPosition;
-		}
-		attempts++;
-	}
-
-	// If good position not found within attempts, return position farthest from town
-	sf::Vector2f corners[4] = {
-	{left, top},
-	{right, top},
-	{left, bottom},
-	{right, bottom}
-	};
-	sf::Vector2f townPos = town->getTownPosition();
-
-	float maxDist = 0.f;
-	sf::Vector2f bestCorner = corners[0];
-	for (const auto& corner : corners) {
-		float dx = corner.x - townPos.x;
-		float dy = corner.y - townPos.y;
-		float dist = std::sqrt(dx * dx + dy * dy);
-		if (dist > maxDist) {
-			maxDist = dist;
-			bestCorner = corner;
-		}
-	}
-
-	return bestCorner;
-}
-
-bool EntityManager::isTownOnSpawnPos(sf::Vector2f spawnPos, std::shared_ptr<Town>& town) {
-	sf::Vector2f townPos = town->getTownPosition();
-	sf::Vector2f townSize = town->getTownSize();  // Returns {width, height}
-	float buffer = 100.f;
-
-	// Rectangular bounds check (no sqrt needed!)
-	float halfWidth = townSize.x / 2.f + buffer;
-	float halfHeight = townSize.y / 2.f + buffer;
-
-	float dx = std::abs(spawnPos.x - townPos.x);
-	float dy = std::abs(spawnPos.y - townPos.y);
-
-	return (dx < halfWidth && dy < halfHeight);
-}
 
 int EntityManager::getScore() const {
 	return score;
+}
+
+void EntityManager::incrementScore() {
+	score++;
 }
 
 float EntityManager::getTime() const {
@@ -310,6 +206,8 @@ void EntityManager::spawnItems(ItemID id, const sf::Vector2f& pos, int qty) {
 	itemManager.spawn(id, pos, qty);
 }
 
-void EntityManager::createBuilding(BuildingID id, sf::Vector2f& pos, int _faction) {
-	buildings.push_back( Building::create(id, pos, _faction) );
+int EntityManager::getNextEntityID() {
+	int id = nextEntityID;
+	nextEntityID++;
+	return id;
 }

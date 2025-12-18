@@ -301,8 +301,12 @@ void Enemy::onDeath() {
     isAlive = false;
 }
 
-sf::Vector2f Enemy::getPosition() {
+sf::Vector2f Enemy::getPosition() const {
 	return enemy.getPosition();
+}
+
+const std::weak_ptr<Hitbox> Enemy::getHitbox() const {
+    return enemyHB;
 }
 
 void Enemy::render(sf::RenderWindow& window) {

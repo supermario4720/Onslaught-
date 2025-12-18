@@ -61,6 +61,10 @@ void Building::update(float dt) {
 	}
 }
 
+void Building::update(float dt, EnemyManager& enemyManager) {
+	update(dt);
+}
+
 void Building::render(sf::RenderWindow& window) {
     window.draw(sprite);
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 
 class InventoryManager;
+class EnemyManager;
 class Building;
 
 class BuildingManager {
@@ -15,7 +16,7 @@ public:
         // building ID should be stored in the manager, with a select (update function updates the selected building on input)
     void createBuilding();
 
-    void update(float dt, sf::Vector2f playerPos, InventoryManager& playerInventory, sf::RenderWindow& window);
+    void update(float dt, sf::Vector2f playerPos, InventoryManager& playerInventory, EnemyManager& enemyManager, sf::RenderWindow& window);
 
     void cycleSelectedBuilding();
 

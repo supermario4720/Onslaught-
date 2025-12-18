@@ -2,7 +2,10 @@
 #include "BuildingManager.hpp"
 #include "InputManager.hpp"
 #include "InventoryManager.hpp"
+#include "EnemyManager.hpp"
 #include "CollisionManager.hpp"
+
+#include "ArcherTower.hpp"
 
 
 #include <vector>
@@ -23,12 +26,17 @@ BuildingManager::BuildingManager()
 // make it so that the function only needs to be called, and no params needed
     // building ID should be stored in the manager, with a select (update function updates the selected building on input)
 void BuildingManager::createBuilding() {
-
-    std::shared_ptr<Building> newBuilding = Building::create(selectedBuilding, mousePos);
-    buildings.push_back(newBuilding);
+    if(selectedBuilding == BuildingID::ArcherTower) {
+        std::shared_ptr<ArcherTower> newBuilding = ArcherTower::create(selectedBuilding, mousePos);
+        buildings.push_back(newBuilding);
+    }
+    else {
+        std::shared_ptr<Building> newBuilding = Building::create(selectedBuilding, mousePos);
+        buildings.push_back(newBuilding);
+    }
 }
 
-void BuildingManager::update(float dt, sf::Vector2f playerPos, InventoryManager& playerInventory, sf::RenderWindow& window) {
+void BuildingManager::update(float dt, sf::Vector2f playerPos, InventoryManager& playerInventory, EnemyManager& enemyManager, sf::RenderWindow& window) {
     InputManager& input = InputManager::getInstance();
     mousePos = input.getMouseWorldPosition(window);
 
@@ -53,13 +61,12 @@ void BuildingManager::update(float dt, sf::Vector2f playerPos, InventoryManager&
                 if ( (contained = playerInventory.checkItemsForBuilding(selectedBuilding)) ) {
                     createBuilding();
                 }
-                std::cout << "Are items sufficient: " << contained << std::endl;
             }
         }
     }
 
     for (auto& building : buildings) {
-        building -> update(dt);
+        building -> update(dt, enemyManager);
     }
 
     // remove expired items

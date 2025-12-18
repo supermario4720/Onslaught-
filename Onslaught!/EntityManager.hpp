@@ -4,6 +4,7 @@
 #include "ItemManager.hpp"
 #include "InventoryManager.hpp"
 #include "BuildingManager.hpp"
+#include "EnemyManager.hpp"
 #include "BuildingID.hpp"
 #include <vector>
 #include <memory>
@@ -23,9 +24,9 @@ private:
 	ItemManager itemManager;
 	BuildingManager buildManager;
 	InventoryManager playerInventory;
+	EnemyManager enemyManager;
 
 	std::vector<std::shared_ptr<Entity>> allEntities;
-	std::vector<std::shared_ptr<Building>> buildings;
 	std::shared_ptr<Player> player;
 	std::weak_ptr<Town> townPtr;
 	Camera* camera = nullptr;
@@ -33,13 +34,6 @@ private:
 	sf::Vector2f playerPositionHolder;
 
 	int nextEntityID = 0;
-
-	int enemyCount = 0;
-	int maxEnemies = 10;
-	float spawnTimer = 0.f;
-	float nextInterval = 1.f;
-	float minSpawnInterval = 2.f;
-	float maxSpawnInterval = 10.f;
 
 	int score = 0;
 	float gameTime = 0.f;
@@ -61,23 +55,16 @@ public:
 
 	void update(float dt, sf::RenderWindow& _window);
 
-	void spawnEnemies(float dt, std::shared_ptr<Town>& town);
-
 	void renderAlive(sf::RenderWindow& _window);
 
-	sf::Vector2f getPlayerPos();
-
-	float randf(float min, float max);
-
-	sf::Vector2f randomSpawnPosition(const sf::View& camera, std::shared_ptr<Town>& town);
-
-	bool isTownOnSpawnPos(sf::Vector2f spawnPos, std::shared_ptr<Town>& town);
+	sf::Vector2f getPlayerPos() const;
 
 	void spawnItems(ItemID id, const sf::Vector2f& pos, int qty);
 
-	void createBuilding(BuildingID id, sf::Vector2f& pos, int _faction);
+	int getNextEntityID();
 
 	int getScore() const;
+	void incrementScore();
 	float getTime() const;
 	bool isPlayerAlive() const;
 	bool isTownAlive() const;

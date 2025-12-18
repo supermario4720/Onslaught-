@@ -9,8 +9,10 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Rect.hpp>
 
+class EnemyManager;
+
 class Building : public Entity {
-private:
+protected:
     std::weak_ptr<Building> selfPtr;
     std::shared_ptr<Hitbox> buildingHitbox;
     BuildingID buildingID;
@@ -33,6 +35,8 @@ public:
 	void onCollision(float damage) override;
 
     void update(float dt) override;
+    // overload function for usage in subclasses
+    virtual void update(float dt, EnemyManager& enemyManager);
 
     void render(sf::RenderWindow& window) override;
 
