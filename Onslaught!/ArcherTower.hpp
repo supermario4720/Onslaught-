@@ -2,6 +2,7 @@
 #include "Building.hpp"
 
 class EnemyManager;
+class Enemy;
 
 class ArcherTower : public Building {
 public:
@@ -19,7 +20,7 @@ private:
     float attackRange      = 250.f;
     float attackCooldown   = 0.8f;
     float timeSinceLastShot = 0.f;
-    float arrowSpeed       = 400.f;
+    float arrowSpeed       = 500.f;
     float arrowDamage      = 10.f;
 
     struct Arrow {

@@ -50,7 +50,7 @@ void ArcherTower::tryShootClosestEnemy(EnemyManager& enemyManager) {
 
     sf::Vector2f towerPos = sprite.getPosition();
 
-    Enemy* closest = nullptr;
+    std::shared_ptr<Enemy> closest = nullptr;
     float closestDistSqr = attackRange * attackRange;
 
     // get the list of enemies from enemy manager
@@ -68,7 +68,7 @@ void ArcherTower::tryShootClosestEnemy(EnemyManager& enemyManager) {
 
         if (distSq <= closestDistSqr) {
             closestDistSqr = distSq;
-            closest = enemy.get();
+            closest = enemy;
         }
     }
     // return if no enemies in range
@@ -80,12 +80,8 @@ void ArcherTower::tryShootClosestEnemy(EnemyManager& enemyManager) {
 
     sf::Vector2f targetPos = closest->getPosition();
     sf::Vector2f dir = targetPos - towerPos;
-    float lenSq = dir.x*dir.x + dir.y*dir.y;
-    if (lenSq == 0.f)
-        return;
-
-    float len = std::sqrt(lenSq);
-    dir /= len;
+    if (dir.x != 0 || dir.y != 0) dir = dir.normalized();
+    else return;
 
     Arrow arrow;
     arrow.shape.setSize({10.f, 3.f});
