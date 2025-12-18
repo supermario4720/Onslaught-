@@ -23,29 +23,38 @@ BuildingManager::BuildingManager()
 // make it so that the function only needs to be called, and no params needed
     // building ID should be stored in the manager, with a select (update function updates the selected building on input)
 void BuildingManager::createBuilding() {
-    const auto& data = BuildingDatabase::get(selectedBuilding);
-    sf::Vector2f buildingSize = data.size;
 
-    std::shared_ptr<Building> newBuilding = std::make_shared<Building>(selectedBuilding, mousePos);
+    std::shared_ptr<Building> newBuilding = Building::create(selectedBuilding, mousePos);
     buildings.push_back(newBuilding);
 }
 
 void BuildingManager::update(float dt, sf::Vector2f playerPos, InventoryManager& playerInventory, sf::RenderWindow& window) {
     InputManager& input = InputManager::getInstance();
-    mousePos = input.getMousePosition(window);
+    mousePos = input.getMouseWorldPosition(window);
 
     if(isBuildMode) {
         bool isOverlapped = CollisionManager::getInstance().checkAllCollision(bounds);
         bounds.setPosition(mousePos);
+
+        if( input.isKeyPressed(sf::Keyboard::Key::R) ) {
+            cycleSelectedBuilding();
+        }
+
         if( isOverlapped ) {
             bounds.setFillColor( sf::Color(255, 100, 100, 155) );
-
-            if( input.isKeyDown(sf::Keyboard::Key::T) ){
-                createBuilding();
-            }
         }
         else {
             bounds.setFillColor( sf::Color(100, 255, 100, 155) );
+            if( input.isKeyPressed(sf::Keyboard::Key::Space) || 
+                input.isKeyPressed(sf::Keyboard::Key::Enter) ||
+                input.isMousePressed(sf::Mouse::Button::Left)
+            ){
+                bool contained = false;
+                if ( (contained = playerInventory.checkItemsForBuilding(selectedBuilding)) ) {
+                    createBuilding();
+                }
+                std::cout << "Are items sufficient: " << contained << std::endl;
+            }
         }
     }
 
@@ -82,13 +91,14 @@ void BuildingManager::render(sf::RenderWindow& window) {
     }
 }
 
-void BuildingManager::toggleBuildMode() {
-    isBuildMode = !isBuildMode;
+void BuildingManager::setBuildMode(bool mode) {
+    isBuildMode = mode;
 }
 
 void BuildingManager::reset() {
     buildings.clear();
     isBuildMode = false;
+
 
     selectedBuilding = BuildingID::ArcherTower;
     

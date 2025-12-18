@@ -79,6 +79,7 @@ int main() {
     CollisionManager& collisionManager = CollisionManager::getInstance();
 
     InputManager& inputManager = InputManager::getInstance();
+    inputManager.setCamera(camera);
 
     // mark 0f, 0,f (center) of world
     sf::RectangleShape center;
@@ -255,6 +256,7 @@ int main() {
     ButtonTextureLoader::getInstance().clearManager();
     ItemTextures::getInstance().clearManager();
     BuildingTextures::getInstance().clearManager();
-    entityManager.reset();
+    entityManager.clear();
+    inputManager.clear();
     return 0;
 }

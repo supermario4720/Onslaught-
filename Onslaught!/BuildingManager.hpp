@@ -21,9 +21,7 @@ public:
 
     void render(sf::RenderWindow& window);
 
-    void toggleBuildMode();
-
-    
+    void setBuildMode(bool mode);
 
     void reset();
 

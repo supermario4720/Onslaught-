@@ -39,7 +39,7 @@ const std::unordered_map<ItemID, ItemData>& ItemDatabase::getMap() {
         }},
 
         { ItemID::Stone, {
-            "Mana Potion",
+            "Stone",
             "Basic material for construction.",
             "temp",
             true,
@@ -47,7 +47,7 @@ const std::unordered_map<ItemID, ItemData>& ItemDatabase::getMap() {
         }},
         { ItemID::Bone, {
             "Bone",
-            "A basic item drop from skeletons.",
+            "Basic item drop from skeletons.",
             "temp",
             true,
             99

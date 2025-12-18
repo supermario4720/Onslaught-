@@ -116,11 +116,15 @@ void Player::handleInput(BuildingManager& buildManager) {
 
         updateAnimationState(movementVector);
 
-        // check if button being held -> prevents attack from spamming when button held
-        if (input.isKeyDown(sf::Keyboard::Key::Space) || input.isKeyDown(sf::Keyboard::Key::Enter) ) {
+
+        if ( (input.isKeyDown(sf::Keyboard::Key::Space)
+         || input.isKeyDown(sf::Keyboard::Key::Enter)
+         || input.isMousePressed(sf::Mouse::Button::Left))
+         && build == false)
+        {
             if (!attackOnCD && !attackHeld && currentStamina > 10.f) {
                 onAttack();
-                currentStamina -= 10.f;
+                currentStamina -= 5.f;
             }
             attackHeld = true;
         }
@@ -145,8 +149,9 @@ void Player::handleInput(BuildingManager& buildManager) {
             speed = initialSpeed;
         }
 
-        if (input.isKeyPressed(sf::Keyboard::Key::B)) {
-            buildManager.toggleBuildMode();
+        if (input.isKeyPressed(sf::Keyboard::Key::E)) {
+            build = !build;
+            buildManager.setBuildMode(build);
         }
     }
 }

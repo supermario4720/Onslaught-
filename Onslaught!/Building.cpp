@@ -9,9 +9,11 @@ Building::Building(BuildingID id, sf::Vector2f pos, int _faction)
 sprite( BuildingTextures::getInstance().getTexture( BuildingDatabase::get(id).texture ) )
 {
 	sf::Vector2f spriteSize = sprite.getGlobalBounds().size;
+	sf::Vector2f buildingSize = BuildingDatabase::get(id).size;
     sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
-	float scale = (80.f / spriteSize.x);
-	sprite.setScale({scale, scale});
+	float scaleX = (buildingSize.x / spriteSize.x);
+	float scaleY = (buildingSize.y / spriteSize.y);
+	sprite.setScale({scaleX, scaleY});
     sprite.setPosition(pos);
 
 	changeInvincibility(0.5f);
@@ -29,7 +31,7 @@ void Building::initializePtr(std::shared_ptr<Building> ptr) {
 }
 
 void Building::initializeHitbox() {
-    buildingHitbox = std::make_shared<Hitbox>(selfPtr, position, sprite.getLocalBounds().size, faction);
+    buildingHitbox = std::make_shared<Hitbox>(selfPtr, position, sprite.getGlobalBounds().size, faction);
     buildingHitbox->changeVisibility(false);
     CollisionManager::getInstance().addEntityHitbox(buildingHitbox);
 }
@@ -65,5 +67,5 @@ void Building::render(sf::RenderWindow& window) {
 
 bool Building::isExpired() const {
 	// not returning expired, because there is nothing between alive and expired yet
-	return isAlive;
+	return !isAlive;
 }

@@ -55,6 +55,8 @@ public:
 
 	void reset();
 
+	void clear();
+
 	void start(Camera* cam);
 
 	void update(float dt, sf::RenderWindow& _window);

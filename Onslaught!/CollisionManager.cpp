@@ -14,7 +14,6 @@ CollisionManager& CollisionManager::getInstance() {
 }
 
 CollisionManager::~CollisionManager() {
-	std::cout << "Collision Manager deconstructed!" << std::endl;
 }
 
 void CollisionManager::addEntityHitbox(std::shared_ptr<Hitbox> hb) {

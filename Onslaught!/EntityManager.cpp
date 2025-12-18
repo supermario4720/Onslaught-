@@ -21,7 +21,7 @@ EntityManager::EntityManager()
 {
 	itemManager = ItemManager();
 	buildManager = BuildingManager();
-	playerInventory = InventoryManager();
+	playerInventory = InventoryManager(7);
 }
 
 EntityManager& EntityManager::getInstance() {
@@ -49,6 +49,21 @@ void EntityManager::reset() {
 	gameTime = 0.f;
 	playerAlive = false;
 	townAlive = false;
+
+	// start with items in inventory for testing/debugging
+	playerInventory.addItem(ItemID::Wood, 200);
+	playerInventory.addItem(ItemID::Stone, 200);
+	playerInventory.printItems();
+}
+
+void EntityManager::clear() {
+	allEntities.clear();
+	CollisionManager::getInstance().clear();
+	itemManager.reset();
+	buildManager.reset();
+	playerInventory.reset();
+	window = nullptr;
+	camera = nullptr;
 }
 
 void EntityManager::start(Camera* cam) {
@@ -153,9 +168,6 @@ void EntityManager::spawnEnemies(float dt, std::shared_ptr<Town>& town) {
 void EntityManager::renderAlive(sf::RenderWindow& _window) {
 	for (auto& ent : allEntities) {
 		ent->render(_window);
-	}
-	for (auto& building : buildings) {
-		building->render(_window);
 	}
 
 	itemManager.render(_window);

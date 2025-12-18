@@ -1,4 +1,5 @@
 #include "InputManager.hpp"
+#include "Camera.hpp"
 #include <algorithm> // std::copy
 #include <iostream>
 
@@ -17,6 +18,10 @@ InputManager::InputManager() {
 
     currentMouse.assign(mouseCount, 0);
     previousMouse.assign(mouseCount, 0);
+}
+
+void InputManager::setCamera(Camera& camera) {
+    cameraPtr = &camera;
 }
 
 void InputManager::update(const sf::RenderWindow& window) {
@@ -82,8 +87,30 @@ sf::Vector2f InputManager::getMousePosition(const sf::RenderWindow& window) cons
     return sf::Vector2f(static_cast<float>(posI.x), static_cast<float>(posI.y));
 }
 
+sf::Vector2f InputManager::getMouseWorldPosition(const sf::RenderWindow& window) const {
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2f worldPos = {0.f,0.f};
+    if(cameraPtr != nullptr) {
+        const sf::View view = (*cameraPtr).getView();
+        worldPos = window.mapPixelToCoords(mousePos, view);
+    }
+    else {
+        worldPos = window.mapPixelToCoords(mousePos);
+    }
+    return worldPos;
+}
+
+
 void InputManager::resetMouse() {
     for (int i = 0; i < 8; ++i) {
         previousMouse[i] = currentMouse[i]; // treat as if button was just released
     }
+}
+
+void InputManager::clear() {
+    currentKeys.clear();
+    previousKeys.clear();
+    currentMouse.clear();
+    previousMouse.clear();
+    cameraPtr = nullptr;
 }
