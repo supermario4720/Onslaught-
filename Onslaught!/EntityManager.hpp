@@ -5,10 +5,12 @@
 #include "InventoryManager.hpp"
 #include "BuildingManager.hpp"
 #include "EnemyManager.hpp"
+#include "ObjectManager.hpp"
 #include "BuildingID.hpp"
 #include <vector>
 #include <memory>
 #include <string>
+#include <cstdlib>
 
 class Entity;
 class Camera;
@@ -25,6 +27,7 @@ private:
 	BuildingManager buildManager;
 	InventoryManager playerInventory;
 	EnemyManager enemyManager;
+	ObjectManager objectManager;
 
 	std::vector<std::shared_ptr<Entity>> allEntities;
 	std::shared_ptr<Player> player;
@@ -75,3 +78,12 @@ public:
 	sf::Vector2f getPlayerStamina();
 
 };
+
+inline int randInt(int min, float max) {
+	int range = max - min;
+	return min + ( std::rand() % range );
+}
+
+inline float randf(float min, float max) {
+	return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
+}

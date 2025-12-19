@@ -1,19 +1,21 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include "ObjectID.hpp"
 #include "Entity.hpp"
 #include "Hitbox.hpp"
 
 
 class Object : public Entity {
 private:
+    ObjectID objID;
     std::weak_ptr<Object> selfPtr;
 
-    sf::RectangleShape objectShape;
+    sf::Sprite sprite;
     std::shared_ptr<Hitbox> objectHB;
 public:
-    Object(sf::Vector2f position, sf::Vector2f size);
+    Object(ObjectID id, sf::Vector2f position);
     ~Object();
-    static std::shared_ptr<Object> create(sf::Vector2f position, sf::Vector2f size);
+    static std::shared_ptr<Object> create(ObjectID id, sf::Vector2f position);
     void initializeHitbox() override;
     void initializePtr(std::shared_ptr<Object> ptr);
 
@@ -21,32 +23,9 @@ public:
 
     void onCollision(float damage) override;
 
-    void render(sf::RenderWindow& window) override;
-
-    sf::RectangleShape getShape() const;
-
-};
-
-
-class ObjectCirc : public Entity {
-private:
-    std::weak_ptr<ObjectCirc> selfPtr;
-
-    sf::CircleShape objectShape;
-    std::shared_ptr<Hitbox> objectHB;
-public:
-    ObjectCirc(sf::Vector2f position, float rad);
-    ~ObjectCirc();
-    static std::shared_ptr<ObjectCirc> create(sf::Vector2f position, float rad);
-    void initializeHitbox() override;
-    void initializePtr(std::shared_ptr<ObjectCirc> ptr);
-
-    void update(float dt) override;
-
-    void onCollision(float damage) override;
+    void onDeath() override;
 
     void render(sf::RenderWindow& window) override;
 
-    sf::CircleShape getShape() const;
-
+    sf::Vector2f getPosition() const;
 };

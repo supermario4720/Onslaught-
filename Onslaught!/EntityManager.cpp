@@ -6,7 +6,6 @@
 #include "Enemy.hpp"
 #include "Object.hpp"
 #include "Town.hpp"
-
 #include "Building.hpp"
 
 #include "CollisionManager.hpp"
@@ -20,6 +19,7 @@ EntityManager::EntityManager()
 	buildManager = BuildingManager();
 	playerInventory = InventoryManager(7);
 	enemyManager = EnemyManager();
+	objectManager = ObjectManager();
 }
 
 EntityManager& EntityManager::getInstance() {
@@ -34,6 +34,7 @@ void EntityManager::setWindow(sf::RenderWindow* _window) {
 void EntityManager::setCamera(Camera* cam) {
 	camera = cam;
 	enemyManager.setCamera(cam);
+	objectManager.setCamera(cam);
 }
 
 void EntityManager::reset() {
@@ -42,6 +43,7 @@ void EntityManager::reset() {
 	enemyManager.reset();
 	itemManager.reset();
 	buildManager.reset();
+	objectManager.reset();
 	playerInventory.reset();
 	nextEntityID = 0;
 	score = 0;
@@ -60,6 +62,7 @@ void EntityManager::clear() {
 	CollisionManager::getInstance().clear();
 	itemManager.reset();
 	buildManager.reset();
+	objectManager.reset();
 	playerInventory.reset();
 	window = nullptr;
 	camera = nullptr;
@@ -100,6 +103,7 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	itemManager.update(dt, playerPositionHolder, playerInventory);
 	buildManager.update(dt, playerPositionHolder, playerInventory, enemyManager, _window);
 	enemyManager.update(dt, buildManager);
+	objectManager.update(dt);
 
 	// update all entites
 	player->updatePlayer(dt, buildManager);
@@ -146,6 +150,7 @@ void EntityManager::renderAlive(sf::RenderWindow& _window) {
 	enemyManager.render(_window);
 	itemManager.render(_window);
 	buildManager.render(_window);
+	objectManager.render(_window);
 }
 
 sf::Vector2f EntityManager::getPlayerPos() const {

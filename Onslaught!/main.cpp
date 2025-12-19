@@ -26,6 +26,7 @@
 #include "ButtonTextureLoader.hpp"
 #include "ItemTextures.hpp"
 #include "BuildingTextures.hpp"
+#include "ObjectTextures.hpp"
 
 #include <vector>
 #include <iostream>
@@ -37,6 +38,7 @@ int main() {
     ButtonTextureLoader::getInstance().loadAllTextures();
     ItemTextures::getInstance().loadAllTextures();
     BuildingTextures::getInstance().loadAllTextures();
+    ObjectTextures::getInstance().loadAllTextures();
     // play noise at start so SFML loads sound properly
     AudioManager::getInstance().play("ButtonClick", 0.f);
 

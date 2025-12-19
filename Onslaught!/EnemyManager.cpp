@@ -39,9 +39,6 @@ void EnemyManager::spawnEnemy(float dt) {
 	}
 }
 
-float EnemyManager::randf(float min, float max) {
-	return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
-}
 
 sf::Vector2f EnemyManager::randomSpawnPosition() {
     const sf::View& view = (*cameraPtr).getView();

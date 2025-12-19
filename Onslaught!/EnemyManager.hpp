@@ -16,8 +16,6 @@ public:
         // building ID should be stored in the manager, with a select (update function updates the selected building on input)
     void spawnEnemy(float dt);
 
-    float randf(float min, float max);
-
 	sf::Vector2f randomSpawnPosition();
 
     void update(float dt, const BuildingManager& buildManager);

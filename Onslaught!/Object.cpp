@@ -1,27 +1,44 @@
 //for obstacles like wood, stones, etc
 
 #include "Object.hpp"
+#include "ObjectData.hpp"
+#include "ObjectTextures.hpp"
 #include "CollisionManager.hpp"
+#include "EntityManager.hpp"
 
-Object::Object(sf::Vector2f position, sf::Vector2f size)
-    : Entity(100.f)
+
+Object::Object(ObjectID id, sf::Vector2f position)
+    : Entity(ObjectDatabase::get(id).maxHealth), objID(id),
+    sprite(ObjectTextures::getInstance().getTexture(id))
 {
     // setting corresponding IDs
     setTypeID(3);
     setFaction(2);
 
-    objectShape.setSize(size);
-    objectShape.setOrigin(size/2.f);
-    objectShape.setPosition(position);
-    objectShape.setFillColor(sf::Color::Green);
+    const ObjectData& obj = ObjectDatabase::get(id);
+
+    sf::Vector2f bounds = sprite.getGlobalBounds().size;
+    sprite.setOrigin(bounds/2.f);
+    // if the object is a rect
+    if(obj.rad == 0.f) {
+        float scaleX = obj.size.x / bounds.x;
+        float scaleY = obj.size.y / bounds.y;
+        sprite.setScale( {scaleX, scaleY} );
+    }
+    else {
+        float scaleX = obj.rad*2.f / bounds.x;
+        float scaleY = obj.rad*2.f / bounds.y;
+        sprite.setScale( {scaleX, scaleY} );
+    }
+    sprite.setPosition(position);
 
 }
 Object::~Object() {
     CollisionManager::getInstance().removeEntityHitbox(objectHB);
 }
 
-std::shared_ptr<Object> Object::create(sf::Vector2f position, sf::Vector2f size) {
-    std::shared_ptr<Object> obj = std::make_shared<Object>(position, size);
+std::shared_ptr<Object> Object::create(ObjectID id, sf::Vector2f position) {
+    std::shared_ptr<Object> obj = std::make_shared<Object>(id, position);
     obj->initializePtr(obj);
     obj->initializeHitbox();
     obj->changeDestructability(false);
@@ -29,8 +46,15 @@ std::shared_ptr<Object> Object::create(sf::Vector2f position, sf::Vector2f size)
 }
 // create hitbox for player
 void Object::initializeHitbox() {
-    objectHB = std::make_shared<Hitbox>(selfPtr, objectShape.getPosition(), objectShape.getSize(), 2);
-    CollisionManager::getInstance().addEntityHitbox(objectHB);
+    const ObjectData& obj = ObjectDatabase::get(objID);
+    if(obj.rad == 0.f) {
+        objectHB = std::make_shared<Hitbox>(selfPtr, sprite.getPosition(), obj.size, 2);
+        CollisionManager::getInstance().addEntityHitbox(objectHB);
+    }
+    else{
+        objectHB = std::make_shared<Hitbox>(selfPtr, sprite.getPosition(), obj.rad, 2);
+        CollisionManager::getInstance().addEntityHitbox(objectHB);
+    }
 }
 
 void Object::initializePtr(std::shared_ptr<Object> ptr) {
@@ -40,13 +64,13 @@ void Object::initializePtr(std::shared_ptr<Object> ptr) {
 void Object::update(float dt) {
     //std::cout << "calling object update" << std::endl;
     if (fromCollision < 1.0f) fromCollision += dt;
-    if (fromCollision > invincibility) objectShape.setFillColor(sf::Color::Green);
+    if (fromCollision > invincibility) sprite.setColor(sf::Color(255,255,255,255));
 }
 
 void Object::onCollision(float damage) {
     //std::cout << "Object collision" << std::endl;
     if (isDestructable && fromCollision > invincibility) {
-        objectShape.setFillColor(sf::Color::White);
+        sprite.setColor(sf::Color(255,255,255,125));
         if (health > damage) { health -= damage; }
         else {
             health = 0;
@@ -54,72 +78,19 @@ void Object::onCollision(float damage) {
         }
     }
     fromCollision = 0.f;
+}
+
+void Object::onDeath() {
+    const ObjectData& obj = ObjectDatabase::get(objID);
+    int dropQty = randInt(obj.minDropQty, obj.maxDropQty);
+
+    EntityManager::getInstance().spawnItems(obj.dropItem, sprite.getPosition(), dropQty);
 }
 
 void Object::render(sf::RenderWindow& window) {
-    window.draw(objectShape);
+    window.draw(sprite);
 }
 
-sf::RectangleShape Object::getShape() const {
-    return objectShape;
-}
-
-
-// -------- Circle Object ---------
-
-ObjectCirc::ObjectCirc(sf::Vector2f position, float rad)
-    : Entity(100.f, false)
-{
-    objectShape.setRadius(rad);
-    objectShape.setOrigin({rad, rad});
-    objectShape.setPosition(position);
-    objectShape.setFillColor(sf::Color::Green);
-
-}
-ObjectCirc::~ObjectCirc() {
-    CollisionManager::getInstance().removeEntityHitbox(objectHB);
-}
-
-std::shared_ptr<ObjectCirc> ObjectCirc::create(sf::Vector2f position, float rad) {
-    std::shared_ptr<ObjectCirc> obj = std::make_shared<ObjectCirc>(position, rad);
-    obj->initializePtr(obj);
-    obj->initializeHitbox();
-    obj->changeDestructability(false);
-    return obj;
-}
-// create hitbox for player
-void ObjectCirc::initializeHitbox() {
-    objectHB = std::make_shared<Hitbox>(selfPtr, objectShape.getPosition(), objectShape.getRadius());
-    CollisionManager::getInstance().addEntityHitbox(objectHB);
-}
-
-void ObjectCirc::initializePtr(std::shared_ptr<ObjectCirc> ptr) {
-    selfPtr = ptr;
-}
-
-void ObjectCirc::update(float dt) {
-    //std::cout << "calling object update" << std::endl;
-    if (fromCollision < 1.0f) fromCollision += dt;
-    if (fromCollision > invincibility) objectShape.setFillColor(sf::Color::Green);
-}
-
-void ObjectCirc::onCollision(float damage) {
-    //std::cout << "Circle object collision" << std::endl;
-    if (isDestructable && fromCollision > invincibility) {
-        objectShape.setFillColor(sf::Color::White);
-        if (health > damage) { health -= damage; }
-        else {
-            health = 0;
-            isAlive = false;
-        }
-    }
-    fromCollision = 0.f;
-}
-
-void ObjectCirc::render(sf::RenderWindow& window) {
-    window.draw(objectShape);
-}
-
-sf::CircleShape ObjectCirc::getShape() const {
-    return objectShape;
+sf::Vector2f Object::getPosition() const {
+    return sprite.getPosition();
 }
