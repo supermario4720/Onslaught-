@@ -50,6 +50,8 @@ public:
 
 	sf::Vector2f getTownSize() const;
 
+	sf::FloatRect getBounds() const;
+
 	bool isPlayerNear();
 
 	void setColor(sf::Color color);

@@ -3,10 +3,12 @@
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
 
+class Camera;
+class Town;
 
 class GameUI {
 public:
-    GameUI(sf::Font& font, sf::RenderWindow& window);
+    GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr);
 
     void update(float dt, sf::RenderWindow& window);
 
@@ -18,14 +20,25 @@ public:
 
     bool pauseClicked(sf::RenderWindow& window);
 
+    void updateArrow();
+
+    void checkTownOnScreen(sf::Vector2f& pos, sf::Vector2f& size);
+
 private:
     // HP UI 
     sf::RectangleShape hpBackground;
     sf::RectangleShape hpBar;
-
+    Camera* cameraPtr = nullptr;
     // Stamina UI
     sf::RectangleShape staminaBackground;
     sf::RectangleShape staminaBar;
+
+    // arrow pointing to town
+    sf::FloatRect townBounds;
+    sf::Sprite townArrow;
+    float arrowOffset = 75.f;
+    bool showArrow = true;
+    std::weak_ptr<Town> townPtr;
 
     // Pause button (uses your Button class)
     Button pauseButton;

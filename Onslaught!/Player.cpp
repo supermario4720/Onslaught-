@@ -124,7 +124,7 @@ void Player::handleInput(BuildingManager& buildManager) {
         {
             if (!attackOnCD && !attackHeld && currentStamina > 10.f) {
                 onAttack();
-                currentStamina -= 5.f;
+                currentStamina -= 3.f;
             }
             attackHeld = true;
         }

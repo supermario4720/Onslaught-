@@ -2,12 +2,12 @@
 #include "Button.hpp"
 #include "InputManager.hpp"
 #include "AudioManager.hpp"
-#include "ButtonTextureLoader.hpp"
+#include "UITextures.hpp"
 #include <iostream>
 
 
 Button::Button(const sf::Vector2f& size, const sf::Vector2f& position, const std::string& textString, sf::Font& font)
-    :text(font), sprite(ButtonTextureLoader::getInstance().getTexture("Button")), isMouseAlreadyOver(false)
+    :text(font), sprite(UITextures::getInstance().getTexture("Button")), isMouseAlreadyOver(false)
 {
     box.setSize(size);
     box.setOrigin(size / 2.f);
@@ -17,7 +17,7 @@ Button::Button(const sf::Vector2f& size, const sf::Vector2f& position, const std
     if (size.x == size.y) isSquare = true;
     else isSquare = false;
 
-    ButtonTextureLoader& textures = ButtonTextureLoader::getInstance();
+    UITextures& textures = UITextures::getInstance();
 
     sprite.setTexture(textures.getTexture("Button"));
     if (isSquare) {
@@ -81,7 +81,7 @@ bool Button::isMouseOver(sf::RenderWindow& window) {
 
 bool Button::isClicked(sf::RenderWindow& window) {
     InputManager& input = InputManager::getInstance();
-    ButtonTextureLoader& textures = ButtonTextureLoader::getInstance();
+    UITextures& textures = UITextures::getInstance();
 
     bool clicked = (isMouseOver(window) && input.isMousePressed(sf::Mouse::Button::Left));
     if (clicked) {
@@ -97,7 +97,7 @@ bool Button::isClicked(sf::RenderWindow& window) {
 }
 
 void Button::setHover(bool h) {
-    ButtonTextureLoader& textures = ButtonTextureLoader::getInstance();
+    UITextures& textures = UITextures::getInstance();
     if (h) {
         box.setFillColor(sf::Color(150, 150, 255));
         if(isSquare) {

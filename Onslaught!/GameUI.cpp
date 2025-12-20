@@ -1,17 +1,22 @@
 #include <SFML/Graphics.hpp>
 #include "GameUI.hpp"
+#include "UITextures.hpp"
+#include "Camera.hpp"
 #include "InputManager.hpp"
 #include "GameStateManager.hpp"
 #include "EntityManager.hpp"
+#include "Town.hpp"
+
 
 #include <iostream>
 #include <sstream>
 #include <string>
 
-GameUI::GameUI(sf::Font& font, sf::RenderWindow& window)
+GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     : scoreText(font), timeText(font), currentHP(0.f), maxHP(0.f), currentStamina(0.f), maxStamina(0.f),
-    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font)
+    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font), cameraPtr(camPtr), townArrow(sf::Texture())
 {
+    townBounds = sf::FloatRect({0.f, 0.f}, {0.f, 0.f});
     screenWidth = (float)window.getSize().x;
     screenHeight = (float)window.getSize().y;
 
@@ -51,6 +56,17 @@ GameUI::GameUI(sf::Font& font, sf::RenderWindow& window)
     auto timeBounds = timeText.getLocalBounds();
     timeText.setOrigin({ timeBounds.size.x / 2, timeBounds.size.y / 2 });
     timeText.setPosition({ (screenWidth - 140.f), 20.f });
+
+
+    // setting up arrow to town
+    sf::Vector2f arrowSize = townArrow.getGlobalBounds().size;
+    townArrow.setOrigin({arrowSize.x / 2.f, arrowSize.y/2.f});
+
+	float scale = (20.f / spriteSize.x);
+	sprite.setScale({scale, scale});
+    townArrow.setPosition({0.f, 0.f});
+
+    townArrow.setColor(sf::Color(255, 255, 255, 175));
 
 }
 
@@ -120,4 +136,30 @@ void GameUI::setStamina(sf::Vector2f stamina) {
 
 bool GameUI::pauseClicked(sf::RenderWindow& window) {
     return pauseButton.isClicked(window);
+}
+
+void GameUI::updateArrow() {
+    const sf::View& view = cameraPtr->getView();
+    sf::Vector2f viewPos = view.getCenter();
+    sf::Vector2f viewSize = view.getSize();
+    checkTownOnScreen(viewPos, viewSize);
+
+    if(!showArrow) return;
+
+    sf::Angle dir = viewPos.angleTo(sf::Vector2f{0.f, 0.f});
+    sf::Vector2f arrowPos(arrowOffset, dir);
+    
+    townArrow.setRotation(dir);
+    townArrow.setPosition(arrowPos);
+}
+
+
+void GameUI::checkTownOnScreen(sf::Vector2f& pos, sf::Vector2f& size) {
+    if(!townPtr.lock().get()) townPtr = EntityManager::getInstance().getTownPtr();
+    if(townBounds.size.x == 0.f || townBounds.size.y == 0.f) {
+        auto town = townPtr.lock();
+        townBounds = town->getBounds();
+    }
+    sf::FloatRect viewRect( {pos - size/2.f}, size );
+    showArrow = !(viewRect.findIntersection(townBounds));
 }

@@ -44,6 +44,7 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "Game", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
+    Camera camera(window, 800.f, 600.f);
     //window.setMinimumSize(sf::Vector2u{ 400, 300 });
     //window.
 
@@ -56,7 +57,7 @@ int main() {
     GameStateManager& gsManager = GameStateManager::getInstance();
 
     TitleScreen titleScreen(font, window);
-    GameUI gameScreen(font, window);
+    GameUI gameScreen(font, window, &camera);
     HowToPlayUI manual(font, window);
     PauseUI pauseScreen(font, window);
     GameOverUI gameOverScreen(font, window);
@@ -73,7 +74,6 @@ int main() {
     sf::Sprite background(grassTexture);
     background.setTextureRect(sf::IntRect({ 0, 0 }, { 800,600 }));
 
-    Camera camera(window, 800.f, 600.f);
     EntityManager& entityManager = EntityManager::getInstance();
     entityManager.start(&camera);
     bool entitiesInitialized = false;

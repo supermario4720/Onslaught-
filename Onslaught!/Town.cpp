@@ -116,6 +116,10 @@ sf::Vector2f Town::getTownSize() const {
 	return rect.getSize();
 }
 
+sf::FloatRect Town::getBounds() const {
+	return sprite.getGlobalBounds();
+}
+
 bool Town::isPlayerNear() {
 	return playerNear;
 }

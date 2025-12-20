@@ -1,9 +1,9 @@
 #pragma once
+#include "Object.hpp"
 #include "ObjectID.hpp"
 #include <vector>
 
 class Camera;
-class Object
 
 class ObjectManager {
 public:

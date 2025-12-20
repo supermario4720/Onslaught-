@@ -77,6 +77,8 @@ public:
 	// return 2 floats (vector2f) of current/max stamina
 	sf::Vector2f getPlayerStamina();
 
+	std::weak_ptr<Town> getTownPtr() const;
+
 };
 
 inline int randInt(int min, float max) {

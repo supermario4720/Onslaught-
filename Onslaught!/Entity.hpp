@@ -22,6 +22,8 @@ protected:
 	// 0=player, 1=enemy, 2=object
 	int faction;
 
+	float spriteOffset = -15.f;
+
 public:
 	// Entity constructer without specifying current health
 	Entity(float _maxHealth, bool destructable = true, bool alive = true);

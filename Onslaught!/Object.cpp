@@ -23,14 +23,15 @@ Object::Object(ObjectID id, sf::Vector2f position)
     if(obj.rad == 0.f) {
         float scaleX = obj.size.x / bounds.x;
         float scaleY = obj.size.y / bounds.y;
-        sprite.setScale( {scaleX, scaleY} );
+        sprite.setScale( {scaleX*1.1f, scaleY*1.1f} );
     }
     else {
         float scaleX = obj.rad*2.f / bounds.x;
         float scaleY = obj.rad*2.f / bounds.y;
-        sprite.setScale( {scaleX, scaleY} );
+        sprite.setScale( {scaleX*1.1f, scaleY*1.1f} );
     }
-    sprite.setPosition(position);
+    spriteOffset = 5.f;
+    sprite.setPosition({position.x, position.y + spriteOffset});
 
 }
 Object::~Object() {
@@ -41,7 +42,6 @@ std::shared_ptr<Object> Object::create(ObjectID id, sf::Vector2f position) {
     std::shared_ptr<Object> obj = std::make_shared<Object>(id, position);
     obj->initializePtr(obj);
     obj->initializeHitbox();
-    obj->changeDestructability(false);
     return obj;
 }
 // create hitbox for player
@@ -74,7 +74,7 @@ void Object::onCollision(float damage) {
         if (health > damage) { health -= damage; }
         else {
             health = 0;
-            isAlive = false;
+            onDeath();
         }
     }
     fromCollision = 0.f;
@@ -83,8 +83,9 @@ void Object::onCollision(float damage) {
 void Object::onDeath() {
     const ObjectData& obj = ObjectDatabase::get(objID);
     int dropQty = randInt(obj.minDropQty, obj.maxDropQty);
-
     EntityManager::getInstance().spawnItems(obj.dropItem, sprite.getPosition(), dropQty);
+    
+    isAlive = false;
 }
 
 void Object::render(sf::RenderWindow& window) {

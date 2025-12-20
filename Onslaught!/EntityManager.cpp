@@ -207,6 +207,10 @@ sf::Vector2f EntityManager::getPlayerStamina() {
 	}
 }
 
+	std::weak_ptr<Town> EntityManager::getTownPtr() const {
+	return townPtr;
+}
+
 void EntityManager::spawnItems(ItemID id, const sf::Vector2f& pos, int qty) {
 	itemManager.spawn(id, pos, qty);
 }

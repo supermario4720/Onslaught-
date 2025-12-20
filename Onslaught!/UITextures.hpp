@@ -2,10 +2,10 @@
 #include <string>
 #include <unordered_map>
 
-class ButtonTextureLoader {
+class UITextures {
 public:
-    static ButtonTextureLoader& getInstance() {
-        static ButtonTextureLoader instance;
+    static UITextures& getInstance() {
+        static UITextures instance;
         return instance;
     }
 
@@ -22,8 +22,8 @@ public:
 private:
     std::unordered_map<std::string, sf::Texture> textures;
 
-    ButtonTextureLoader() = default;
-    ~ButtonTextureLoader();
-    ButtonTextureLoader(const ButtonTextureLoader&) = delete;
-    ButtonTextureLoader& operator=(const ButtonTextureLoader&) = delete;
+    UITextures() = default;
+    ~UITextures();
+    UITextures(const UITextures&) = delete;
+    UITextures& operator=(const UITextures&) = delete;
 };

@@ -13,8 +13,9 @@ sprite( BuildingTextures::getInstance().getTexture( BuildingDatabase::get(id).te
     sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
 	float scaleX = (buildingSize.x / spriteSize.x);
 	float scaleY = (buildingSize.y / spriteSize.y);
-	sprite.setScale({scaleX, scaleY});
-    sprite.setPosition(pos);
+	sprite.setScale({scaleX * 1.15f, scaleY * 1.15f});
+	spriteOffset = 7.f;
+    sprite.setPosition({pos.x, pos.y + spriteOffset});
 
 	changeInvincibility(0.5f);
 }
