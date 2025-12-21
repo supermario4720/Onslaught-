@@ -18,6 +18,7 @@ private:
 
     bool expired = false;
     bool inPickupRange = false;
+    float pickupRange = 60.f;
 
 
 public:

@@ -191,7 +191,7 @@ void GameUI::setKeyboardTexture() {
     keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::S, 2, 4, { 80.f,  baseY }, false) );
     keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::D, 3, 2, { 120.f,  baseY }, false) );
     keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::E, 4, 2, { 340.f,  baseY }, false) );
-    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::R, 5, 2, { 400.f,  baseY }, false) );
+    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::R, 1, 4, { 400.f,  baseY }, false) );
 
 
     keyboardButtons.push_back( KeyIcon(keyboardExtraTexture, sf::Keyboard::Key::Space, 2, 2, {500.f,  baseY }, true) );

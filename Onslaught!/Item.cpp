@@ -36,7 +36,7 @@ void Item::update(float dt, sf::Vector2f playerPos) {
         inPickupRange = false;
     }
 
-    if (distlen < 50.f) {
+    if (distlen < pickupRange) {
         float relativeSpeed = (110.f - distlen)* (110.f - distlen) / 12100.f;
         if (relativeSpeed > 1.f) relativeSpeed = 1.f;
         sprite.move(movementVector * relativeSpeed* dt);
