@@ -37,7 +37,7 @@ void Building::initializeHitbox() {
     CollisionManager::getInstance().addEntityHitbox(buildingHitbox);
 }
 
-void Building::onCollision(float damage) {
+void Building::onCollision(float damage, sf::Vector2f damageOrigin) {
 	if (isDestructable && fromCollision > invincibility) {
 		
         fromCollision = 0.f;
@@ -75,6 +75,6 @@ bool Building::isExpired() const {
 	return !isAlive;
 }
 
-sf::Vector2f Building::getPosition() const {
+const sf::Vector2f Building::getPosition() const {
 	return position;
 }

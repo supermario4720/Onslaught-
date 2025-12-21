@@ -22,12 +22,6 @@ Player::Player()
     shape.setFillColor(sf::Color::Blue);
     speed = initialSpeed;
 
-    center.setRadius(2);
-    center.setOrigin({ 1,1 });
-    center.setPosition(pos);
-    center.setFillColor(sf::Color::White);
-
-
     movementVector = { 0.f, 0.f };
     facing = sf::degrees(0);
 
@@ -165,6 +159,7 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
         std::cout << isAlive << std::endl;
         return;
     }
+    position = sprite.getPosition();
     AudioManager& audio = AudioManager::getInstance();
 
     if (targetState == AnimationController::State::Death) {
@@ -275,10 +270,6 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
     playerHB->updateHitbox(newPos);
     sprite.setPosition({ newPos.x, newPos.y + spriteOffset });
     
-    center.setPosition(getPosition());
-
-    // sprite.setRotation(facing + sf::degrees(90));
-
     // update attack boxes
     for (auto attack = activeAttacks.begin(); attack != activeAttacks.end(); ) {
         // it is only pointer, must get value of ptr with (*ptr)
@@ -312,7 +303,7 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
 
 }
 
-void Player::onCollision(float damage) {
+void Player::onCollision(float damage, sf::Vector2f damageOrigin) {
     // if not in death animation and is not invulnerable time
     if (fromCollision > invincibility && targetState != AnimationController::State::Death) {
         std::cout << "Player collision" << std::endl;
@@ -337,7 +328,6 @@ void Player::onCollision(float damage) {
 void Player::render(sf::RenderWindow& window) {
     // window.draw(shape);
     window.draw(sprite);
-    // window.draw(center);
     for (auto& hb : activeAttacks) hb -> render(window);
 }
 
@@ -378,7 +368,7 @@ sf::CircleShape Player::getShape() const {
     return shape;
 }
 
-sf::Vector2f Player::getPosition() const {
+const sf::Vector2f Player::getPosition() const {
     return shape.getPosition();
 }
 

@@ -23,7 +23,7 @@
 #include "Object.hpp"
 #include "CollisionManager.hpp"
 #include "EntityManager.hpp"
-#include "ButtonTextureLoader.hpp"
+#include "UITextures.hpp"
 #include "ItemTextures.hpp"
 #include "BuildingTextures.hpp"
 #include "ObjectTextures.hpp"
@@ -35,7 +35,7 @@
 
 int main() {
     AudioManager::getInstance().loadAllSounds();
-    ButtonTextureLoader::getInstance().loadAllTextures();
+    UITextures::getInstance().loadAllTextures();
     ItemTextures::getInstance().loadAllTextures();
     BuildingTextures::getInstance().loadAllTextures();
     ObjectTextures::getInstance().loadAllTextures();
@@ -255,7 +255,7 @@ int main() {
         window.display();
     }
     AudioManager::getInstance().clearManager();
-    ButtonTextureLoader::getInstance().clearManager();
+    UITextures::getInstance().clearManager();
     ItemTextures::getInstance().clearManager();
     BuildingTextures::getInstance().clearManager();
     entityManager.clear();

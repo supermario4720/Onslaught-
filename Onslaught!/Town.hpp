@@ -38,7 +38,9 @@ public:
 
 	void initializeHitbox() override;
 
-	void onCollision(float damage) override;
+	void onCollision(float damage, sf::Vector2f damageOrigin) override;
+
+	bool wasDamaged() const;
 
 	void update(float dt) override;
 

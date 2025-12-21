@@ -105,9 +105,11 @@ void Hitbox::changeVisibility(bool vis) {
 	isVisible = vis;
 }
 
-void Hitbox::onCollision(float damage) {
+void Hitbox::onCollision(float damage, sf::Vector2f damageSource) {
 	if (auto entity = hitboxOwner.lock()) {
-		entity->onCollision(damage);
+		auto owner = hitboxOwner.lock();
+		// std::cout << owner->getPosition().x << ", " << owner->getPosition().y << std::endl;
+		entity->onCollision(damage, damageSource);
 	}
 }
 
@@ -212,7 +214,7 @@ void SwingHitbox::updateTriggerHitbox(float dt, sf::Vector2f currentPlayerPos, s
 				}
 			}
 			//std::cout << isColliding << std::endl;
-			if (isColliding) entityHB->onCollision(damage);
+			if (isColliding) entityHB->onCollision(damage, thisOwner->getPosition());
 			++entityIteration;
 		}
 	}

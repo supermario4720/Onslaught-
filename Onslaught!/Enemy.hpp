@@ -12,9 +12,9 @@ class Enemy : public Entity {
 private:
 	std::weak_ptr<Enemy> selfPtr;
 	EntityManager& entityManager;
-	sf::CircleShape enemy;
 	// sf::Vector2f homePos;
 
+	sf::CircleShape enemy;
 	sf::Texture spriteSheet;
 	sf::Sprite sprite;
 	AnimationController animations;
@@ -26,10 +26,9 @@ private:
 
 	std::shared_ptr<Hitbox> enemyHB;
 
-	sf::Angle facing;
+	float facing;
 	sf::Vector2f movementVector;
 
-	sf::Vector2f knockbackVector;
 	float knockbackDuration;
 	float currentKnockbackTime;
 
@@ -54,7 +53,7 @@ public:
 
 	//void update(float dt, sf::Vector2f playerPos);
 	// instead of passing playerPos, read it from inside update -> make player be publically known
-	void onCollision(float damage) override;
+	void onCollision(float damage, sf::Vector2f damageOrigin) override;
 
 	void onDeath() override;
 
@@ -63,13 +62,13 @@ public:
 
 	void render(sf::RenderWindow& window) override;
 
-	sf::Vector2f getPosition() const;
+	const sf::Vector2f getPosition() const override;
 
 	const std::weak_ptr<Hitbox> getHitbox() const;
 
 	void updateAnimationState(sf::Vector2f moveVec);
 
-	void calculateKnockback();
+	void calculateKnockback(sf::Vector2f damageOrigin);
 
 	sf::Vector2f chooseTarget(const BuildingManager& buildManager);
 };

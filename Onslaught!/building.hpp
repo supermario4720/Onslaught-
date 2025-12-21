@@ -32,7 +32,7 @@ public:
 
     void initializeHitbox() override;
 
-	void onCollision(float damage) override;
+	void onCollision(float damage, sf::Vector2f damageOrigin) override;
 
     void update(float dt) override;
     // overload function for usage in subclasses
@@ -42,6 +42,6 @@ public:
 
     bool isExpired() const;
 
-    sf::Vector2f getPosition() const;
+    const sf::Vector2f getPosition() const override;
 
 };

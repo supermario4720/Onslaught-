@@ -14,7 +14,7 @@
 
 GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     : scoreText(font), timeText(font), currentHP(0.f), maxHP(0.f), currentStamina(0.f), maxStamina(0.f),
-    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font), cameraPtr(camPtr), townArrow(sf::Texture())
+    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font), cameraPtr(camPtr), townArrow(UITextures::getInstance().getTexture("Pointer"))
 {
     townBounds = sf::FloatRect({0.f, 0.f}, {0.f, 0.f});
     screenWidth = (float)window.getSize().x;
@@ -62,12 +62,9 @@ GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     sf::Vector2f arrowSize = townArrow.getGlobalBounds().size;
     townArrow.setOrigin({arrowSize.x / 2.f, arrowSize.y/2.f});
 
-	float scale = (20.f / spriteSize.x);
-	sprite.setScale({scale, scale});
+	float scale = (40.f / arrowSize.x);
+	//townArrow.setScale({scale, scale});
     townArrow.setPosition({0.f, 0.f});
-
-    townArrow.setColor(sf::Color(255, 255, 255, 175));
-
 }
 
 void GameUI::update(float dt, sf::RenderWindow& window) {
@@ -79,15 +76,15 @@ void GameUI::update(float dt, sf::RenderWindow& window) {
     std::stringstream timeStream;
     timeStream << std::fixed << std::setprecision(2) << entMan.getTime();
     std::string timeStr = timeStream.str();
-
     std::string scoreStr = std::to_string(entMan.getScore());
-
     scoreText.setString(scoreStr);
     timeText.setString(timeStr);
 
     // set HP bar
     setHP(entMan.getPlayerHealth());
     setStamina(entMan.getPlayerStamina());
+
+    updateArrow();
 
     bool hover = pauseButton.isMouseOver(window);
     pauseButton.setHover(hover);
@@ -110,6 +107,9 @@ void GameUI::update(float dt, sf::RenderWindow& window) {
 }
 
 void GameUI::render(sf::RenderWindow& window) {
+    if(showArrow) {
+        window.draw(townArrow);
+    }
     window.draw(hpBackground);
     window.draw(hpBar);
     window.draw(staminaBackground);
@@ -146,16 +146,27 @@ void GameUI::updateArrow() {
 
     if(!showArrow) return;
 
-    sf::Angle dir = viewPos.angleTo(sf::Vector2f{0.f, 0.f});
-    sf::Vector2f arrowPos(arrowOffset, dir);
-    
+    auto town = townPtr.lock();
+    if(!town->checkAlive()) return;
+    if(town->wasDamaged()) {
+        townArrow.setColor(sf::Color(255, 100, 100, 255));
+    }
+    else {
+        townArrow.setColor(sf::Color(255, 255, 255, 255));
+    }
+
+
+    sf::Angle dir = initialDir.angleTo( -viewPos );
+    sf::Vector2f arrowOffsetPos(arrowOffset, dir);
+    sf::Vector2f arrowPos = arrowOffsetPos + viewSize/2.f;
+
     townArrow.setRotation(dir);
     townArrow.setPosition(arrowPos);
 }
 
 
 void GameUI::checkTownOnScreen(sf::Vector2f& pos, sf::Vector2f& size) {
-    if(!townPtr.lock().get()) townPtr = EntityManager::getInstance().getTownPtr();
+    if(townPtr.expired()) townPtr = EntityManager::getInstance().getTownPtr();
     if(townBounds.size.x == 0.f || townBounds.size.y == 0.f) {
         auto town = townPtr.lock();
         townBounds = town->getBounds();

@@ -13,8 +13,6 @@ private:
     std::weak_ptr<Player> selfPtr;
     sf::CircleShape shape;
 
-    sf::CircleShape center;
-
     sf::Texture spriteSheet;
     sf::Sprite sprite;
     AnimationController animations;
@@ -65,13 +63,13 @@ public:
     void update(float deltaTime) override;
     // created player exclusive update function because it would need different parameters
     void updatePlayer(float dt, BuildingManager& buildManager);
-    void onCollision(float damage) override;
+    void onCollision(float damage, sf::Vector2f damageOrigin) override;
     void render(sf::RenderWindow& window) override;
     float getDirection() override;
     float getSize() override;
 
     void onAttack();
-    sf::Vector2f getPosition() const;
+    const sf::Vector2f getPosition() const override;
     sf::CircleShape getShape() const;
     // return 2 floats (vector2f) of current/max hp
     sf::Vector2f getHealth() const;

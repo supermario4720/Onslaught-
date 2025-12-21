@@ -60,7 +60,7 @@ void Town::initializeHitbox() {
 }
 
 
-void Town::onCollision(float damage) {
+void Town::onCollision(float damage, sf::Vector2f damageOrigin) {
 	if (isDestructable && fromCollision > invincibility) {
 
 		rect.setFillColor(sf::Color::White);
@@ -85,7 +85,7 @@ void Town::onCollision(float damage) {
 void Town::update(float dt) {
 
 	if (fromCollision < 3.0f) fromCollision += dt;
-	if (fromCollision > 0.1f) {
+	if (fromCollision > 0.2f) {
 		rect.setFillColor(sf::Color(155,155,155));
 
 		sprite.setTexture(normalTexture);
@@ -114,6 +114,11 @@ sf::Vector2f Town::getTownPosition() const {
 
 sf::Vector2f Town::getTownSize() const {
 	return rect.getSize();
+}
+
+bool Town::wasDamaged() const {
+	if(fromCollision > 0.2f) return false;
+	return true;
 }
 
 sf::FloatRect Town::getBounds() const {

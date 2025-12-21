@@ -1,10 +1,12 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <iostream>
 
 // base class for all entities
 class Entity : public std::enable_shared_from_this<Entity> {
 protected:
+	sf::Vector2f position;
 	float maxHealth;
 	float health;
 	bool isAlive;
@@ -12,6 +14,7 @@ protected:
 	bool isDestructable;
 
 	float fromCollision;
+	sf::Vector2f knockbackVector = {0.f, 0.f};
 	float invincibility;
 
 	// Each instance of entity should be assigned a unique identifier
@@ -32,11 +35,13 @@ public:
 
 	virtual void initializeHitbox();
 
-	virtual void onCollision(float damage);
+	virtual void onCollision(float damage, sf::Vector2f damageOrigin);
 
 	virtual void update(float dt);
 
 	virtual float getSize();
+
+	virtual const sf::Vector2f getPosition() const;
 
 	virtual float getDirection();
 

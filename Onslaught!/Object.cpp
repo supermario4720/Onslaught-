@@ -67,7 +67,7 @@ void Object::update(float dt) {
     if (fromCollision > invincibility) sprite.setColor(sf::Color(255,255,255,255));
 }
 
-void Object::onCollision(float damage) {
+void Object::onCollision(float damage, sf::Vector2f damageOrigin) {
     //std::cout << "Object collision" << std::endl;
     if (isDestructable && fromCollision > invincibility) {
         sprite.setColor(sf::Color(255,255,255,125));
@@ -92,6 +92,6 @@ void Object::render(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-sf::Vector2f Object::getPosition() const {
+const sf::Vector2f Object::getPosition() const {
     return sprite.getPosition();
 }

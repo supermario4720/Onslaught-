@@ -14,19 +14,14 @@ Enemy::Enemy(sf::Vector2f initPos, float enemySize, float speed)
 {
     // setting corresponding IDs
     setTypeID(2);
-    setFaction(1);
-
-    //movementSpeed = 10.f;
-    
+    setFaction(1);    
 
     enemy.setRadius(size);
-    enemy.setOrigin({ size, size });
+    enemy.setOrigin({size, size});
     enemy.setPosition(initPos);
-    enemy.setFillColor(sf::Color::Red);
 
     movementVector = { 0.f, 0.f };
-    facing = sf::degrees(0);
-    knockbackVector = { 0.f, 0.f };
+    facing = 0.f;
     knockbackDuration = 0.2f;
     currentKnockbackTime = 0.f;
     isAttacking = false;
@@ -89,7 +84,7 @@ Enemy::~Enemy() {
 
 // create hitbox for player
 void Enemy::initializeHitbox() {
-    enemyHB = std::make_shared<Hitbox>(selfPtr, enemy.getPosition(), enemy.getRadius(), 1);
+    enemyHB = std::make_shared<Hitbox>(selfPtr, getPosition(), size, 1);
     CollisionManager::getInstance().addEntityHitbox(enemyHB);
 }
 
@@ -128,8 +123,10 @@ void Enemy::update(float dt, const BuildingManager& buildManager) {
     // turn to unit vector, then multiply by speed
     if (movementVector.x != 0.f || movementVector.y != 0.f) {
         movementVector = movementVector.normalized();
-        facing = movementVector.angle().wrapSigned();
-        movementVector *= movementSpeed * dt;
+        facing = movementVector.angle().wrapUnsigned().asDegrees();
+
+        movementVector = movementVector + knockbackVector;
+        movementVector *= movementSpeed*dt;
         //audio.play("enemyFootstep", false, 50.f);
     }
 
@@ -183,19 +180,18 @@ void Enemy::update(float dt, const BuildingManager& buildManager) {
 
         if (collided && !isAttacking && !isTakingDamage) {
             if (hb->getFaction() != faction) {
-                hb->onCollision(attackDamage);
-                float degrees = facing.wrapUnsigned().asDegrees();
-                if (degrees < 45.f || degrees > 315.f) {
+                hb->onCollision(attackDamage, sprite.getPosition());
+                if (facing < 45.f || facing > 315.f) {
                     targetState = AnimationController::State::AttackRight;
                 }
-                if (degrees <= 135.f && degrees >= 45.f) {
+                if (facing <= 135.f && facing >= 45.f) {
                     targetState = AnimationController::State::AttackDown;
                 }
-                if (degrees < 225.f && degrees > 135.f) {
+                if (facing < 225.f && facing > 135.f) {
                     targetState = AnimationController::State::AttackRight;
                     facingLeft = true;
                 }
-                if (degrees <= 315.f && degrees >= 225.f) {
+                if (facing <= 315.f && facing >= 225.f) {
                     targetState = AnimationController::State::AttackUp;
                 }
                 audio.play("enemyAttack", false, 30.f);
@@ -237,15 +233,14 @@ void Enemy::update(float dt, const BuildingManager& buildManager) {
         sprite.setScale({ scale, scale });
     }
 
-    enemy.move(tempMoveVec + knockbackVector*dt);
-
+    
+    enemy.move(tempMoveVec);
     sf::Vector2f newPos = enemy.getPosition();
     enemyHB->updateHitbox(newPos);
     sprite.setPosition({ newPos.x, newPos.y + spriteOffset });
 
     if (fromCollision < 1.0f) fromCollision += dt;
     if (fromCollision > invincibility) {
-        enemy.setFillColor(sf::Color::Red);
         isTakingDamage = false;
     }
     
@@ -253,41 +248,38 @@ void Enemy::update(float dt, const BuildingManager& buildManager) {
         currentKnockbackTime += dt;
     }
     else {
-        knockbackVector = sf::Vector2f ( { 0.f, 0.f } );
+        knockbackVector = sf::Vector2f ( {0.f, 0.f} );
     }
     //std::cout << fromCollision << std::endl;
 }
 
-void Enemy::onCollision(float damage) {
+void Enemy::onCollision(float damage, sf::Vector2f damageOrigin) {
     //std::cout << "enemy collide" << std::endl;
     if (fromCollision > invincibility && targetState != AnimationController::State::Death) {
         // 0.1f time for invicibility
-        enemy.setFillColor(sf::Color::White);
         fromCollision = 0.f;
         // when taking damage, calculate knockback
-        calculateKnockback();
+        calculateKnockback(damageOrigin);
         isTakingDamage = true;
 
         if (health > damage) { 
             isAttacking = false;
-
-            float degrees = facing.wrapUnsigned().asDegrees();
             health -= damage;
 
             AudioManager::getInstance().play("enemyHurt", true, 30.f);
 
             animations.forceAnimationEnd();
-            if (degrees < 45.f || degrees > 315.f) {
+            if (facing < 45.f || facing > 315.f) {
                 targetState = AnimationController::State::KnockbackRight;
             }
-            if (degrees <= 135.f && degrees >= 45.f) {
+            if (facing <= 135.f && facing >= 45.f) {
                 targetState = AnimationController::State::KnockbackUp;
             }
-            if (degrees < 225.f && degrees > 135.f) {
+            if (facing < 225.f && facing > 135.f) {
                 targetState = AnimationController::State::KnockbackRight;
                 facingLeft = true;
             }
-            if (degrees <= 315.f && degrees >= 225.f) {
+            if (facing <= 315.f && facing >= 225.f) {
                 targetState = AnimationController::State::KnockbackDown;
             }
         }
@@ -302,12 +294,11 @@ void Enemy::onCollision(float damage) {
 void Enemy::onDeath() {
     // call EntityManager instance to get item manager, and spawn item
     entityManager.spawnItems(drop, getPosition(), qty);
-
     isAlive = false;
 }
 
-sf::Vector2f Enemy::getPosition() const {
-	return enemy.getPosition();
+const sf::Vector2f Enemy::getPosition() const {
+	return sprite.getPosition();
 }
 
 const std::weak_ptr<Hitbox> Enemy::getHitbox() const {
@@ -323,44 +314,46 @@ void Enemy::updateAnimationState(sf::Vector2f moveVec) {
     if (targetState == AnimationController::State::Death) return;
     facingLeft = false;
 
-    float degrees = facing.wrapUnsigned().asDegrees();
-    if (degrees < 45.f || degrees > 315.f) {
+    if (facing < 45.f || facing > 315.f) {
         targetState = AnimationController::State::IdleRight;
     }
-    if (degrees <= 135.f && degrees >= 45.f) {
+    if (facing <= 135.f && facing >= 45.f) {
         targetState = AnimationController::State::IdleDown;
     }
-    if (degrees < 225.f && degrees > 135.f) {
+    if (facing < 225.f && facing > 135.f) {
         targetState = AnimationController::State::IdleRight;
         facingLeft = true;
     }
-    if (degrees <= 315.f && degrees >= 225.f) {
+    if (facing <= 315.f && facing >= 225.f) {
         targetState = AnimationController::State::IdleUp;
     }
 
     if (moveVec.x != 0 || moveVec.y != 0) {
-        if (degrees < 45.f || degrees > 315.f) {
+        if (facing < 45.f || facing > 315.f) {
             targetState = AnimationController::State::WalkRight;
         }
-        if (degrees <= 135.f && degrees >= 45.f) {
+        if (facing <= 135.f && facing >= 45.f) {
             targetState = AnimationController::State::WalkDown;
         }
-        if (degrees < 225.f && degrees > 135.f) {
+        if (facing < 225.f && facing > 135.f) {
             targetState = AnimationController::State::WalkRight;
             facingLeft = true;
         }
-        if (degrees <= 315.f && degrees >= 225.f) {
+        if (facing <= 315.f && facing >= 225.f) {
             targetState = AnimationController::State::WalkUp;
         }
     }
 }
 
-void Enemy::calculateKnockback() {
+void Enemy::calculateKnockback(sf::Vector2f damageOrigin) {
     currentKnockbackTime = 0.f;
-    float facingAngle = facing.asRadians();
+    knockbackVector = sprite.getPosition() - damageOrigin;
+    
+    std::cout << "~~~~~~~~~~~~~~~~~~" << std::endl;
+    std::cout << damageOrigin.x << ", " << damageOrigin.y << std::endl;
+    std::cout << sprite.getPosition().x << ", " << sprite.getPosition().y << std::endl;
 
-    sf::Vector2f facingVec( { std::cos(facingAngle), std::sin(facingAngle) } );
-    knockbackVector = -facingVec * movementSpeed * 3.f;
+    if(knockbackVector.x != 0 || knockbackVector.y != 0) knockbackVector = knockbackVector.normalized()*3.f;
 
 }
 

@@ -118,7 +118,7 @@ void ArcherTower::updateArrows(float dt, EnemyManager& enemyManager) {
             const auto& enemyHB = enemy->getHitbox().lock();
 
             if ( CollisionManager::checkCircleRectCollision( enemyHB->getCircleHitbox(), arrow.shape ) ) {
-                enemy->onCollision(arrowDamage);
+                enemy->onCollision(arrowDamage, arrow.shape.getPosition());
                 hit = true;
                 break;
             }

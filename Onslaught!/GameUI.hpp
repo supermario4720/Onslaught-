@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
 
@@ -36,6 +37,8 @@ private:
     // arrow pointing to town
     sf::FloatRect townBounds;
     sf::Sprite townArrow;
+    sf::Vector2f initialDir = {1.f, 0.f};
+    
     float arrowOffset = 75.f;
     bool showArrow = true;
     std::weak_ptr<Town> townPtr;
@@ -56,5 +59,4 @@ private:
 
     float currentStamina;
     float maxStamina;
-
 };

@@ -55,7 +55,7 @@ public:
 
 	void changeVisibility(bool vis);
 	// instead, get owner ptr and call collision from there
-	virtual void onCollision(float damage);
+	virtual void onCollision(float damage, sf::Vector2f damageSource);
 
 	virtual void setFaction(int _faction);
 

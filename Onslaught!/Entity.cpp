@@ -15,7 +15,7 @@ Entity::Entity(float _maxHealth, float _health, bool destructable, bool alive)
 
 void Entity::initializeHitbox() {}
 
-void Entity::onCollision(float damage) {
+void Entity::onCollision(float damage, sf::Vector2f damageOrigin) {
     std::cout << "base entity collision" << std::endl;
 }
 
@@ -25,6 +25,10 @@ void Entity::update(float dt) {
 
 float Entity::getSize() { 
     return 30.f;
+}
+
+const sf::Vector2f Entity::getPosition() const {
+    return position;
 }
 
 float Entity::getDirection() { 

@@ -21,11 +21,11 @@ public:
 
     void update(float dt) override;
 
-    void onCollision(float damage) override;
+    void onCollision(float damage, sf::Vector2f damageOrigin) override;
 
     void onDeath() override;
 
     void render(sf::RenderWindow& window) override;
 
-    sf::Vector2f getPosition() const;
+    const sf::Vector2f getPosition() const override;
 };
