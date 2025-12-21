@@ -3,9 +3,13 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
+#include "KeyIcon.hpp"
+
+#include <vector>
 
 class Camera;
 class Town;
+struct KeyIcon;
 
 class GameUI {
 public:
@@ -25,27 +29,31 @@ public:
 
     void checkTownOnScreen(sf::Vector2f& pos, sf::Vector2f& size);
 
+    void setKeyboardTexture();
+
 private:
-    // HP UI 
+    Camera* cameraPtr = nullptr;
+
     sf::RectangleShape hpBackground;
     sf::RectangleShape hpBar;
-    Camera* cameraPtr = nullptr;
-    // Stamina UI
     sf::RectangleShape staminaBackground;
     sf::RectangleShape staminaBar;
+    // player stats
+    float currentHP;
+    float maxHP;
+    float currentStamina;
+    float maxStamina;
 
     // arrow pointing to town
     sf::FloatRect townBounds;
     sf::Sprite townArrow;
     sf::Vector2f initialDir = {1.f, 0.f};
-    
     float arrowOffset = 75.f;
     bool showArrow = true;
     std::weak_ptr<Town> townPtr;
 
     // Pause button (uses your Button class)
     Button pauseButton;
-
     //maybe make get function for player health values instead for text
     sf::Text scoreText;
     sf::Text timeText;
@@ -53,10 +61,6 @@ private:
     float screenWidth;
     float screenHeight;
 
-    // player stats
-    float currentHP;
-    float maxHP;
 
-    float currentStamina;
-    float maxStamina;
+    std::vector<KeyIcon> keyboardButtons;
 };

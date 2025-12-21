@@ -2,11 +2,9 @@
 #include "GameUI.hpp"
 #include "UITextures.hpp"
 #include "Camera.hpp"
-#include "InputManager.hpp"
 #include "GameStateManager.hpp"
 #include "EntityManager.hpp"
 #include "Town.hpp"
-
 
 #include <iostream>
 #include <sstream>
@@ -65,6 +63,8 @@ GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
 	float scale = (40.f / arrowSize.x);
 	//townArrow.setScale({scale, scale});
     townArrow.setPosition({0.f, 0.f});
+
+    setKeyboardTexture();
 }
 
 void GameUI::update(float dt, sf::RenderWindow& window) {
@@ -85,7 +85,8 @@ void GameUI::update(float dt, sf::RenderWindow& window) {
     setStamina(entMan.getPlayerStamina());
 
     updateArrow();
-
+    for(KeyIcon& button : keyboardButtons) button.updateVisual(input);
+ 
     bool hover = pauseButton.isMouseOver(window);
     pauseButton.setHover(hover);
 
@@ -109,6 +110,10 @@ void GameUI::update(float dt, sf::RenderWindow& window) {
 void GameUI::render(sf::RenderWindow& window) {
     if(showArrow) {
         window.draw(townArrow);
+    }
+    for(KeyIcon& button : keyboardButtons) {
+        //std::cout << "drawn" << std::endl;
+        button.render(window);
     }
     window.draw(hpBackground);
     window.draw(hpBar);
@@ -155,7 +160,6 @@ void GameUI::updateArrow() {
         townArrow.setColor(sf::Color(255, 255, 255, 255));
     }
 
-
     sf::Angle dir = initialDir.angleTo( -viewPos );
     sf::Vector2f arrowOffsetPos(arrowOffset, dir);
     sf::Vector2f arrowPos = arrowOffsetPos + viewSize/2.f;
@@ -173,4 +177,23 @@ void GameUI::checkTownOnScreen(sf::Vector2f& pos, sf::Vector2f& size) {
     }
     sf::FloatRect viewRect( {pos - size/2.f}, size );
     showArrow = !(viewRect.findIntersection(townBounds));
+}
+
+
+void GameUI::setKeyboardTexture() {
+    auto& keyboardTexture = UITextures::getInstance().getTexture("KeyboardButtons");
+    auto& keyboardExtraTexture = UITextures::getInstance().getTexture("KeyboardExtraButtons");
+    keyboardButtons.clear();
+
+    float baseY = screenHeight - 60.f;
+    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::W, 6, 4, { 80.f,  baseY - 40.f }, false) );
+    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::A, 0, 2, { 40.f,  baseY }, false) );
+    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::S, 2, 4, { 80.f,  baseY }, false) );
+    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::D, 3, 2, { 120.f,  baseY }, false) );
+    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::E, 4, 2, { 340.f,  baseY }, false) );
+    keyboardButtons.push_back( KeyIcon(keyboardTexture, sf::Keyboard::Key::R, 5, 2, { 400.f,  baseY }, false) );
+
+
+    keyboardButtons.push_back( KeyIcon(keyboardExtraTexture, sf::Keyboard::Key::Space, 2, 2, {500.f,  baseY }, true) );
+    keyboardButtons.push_back( KeyIcon(keyboardExtraTexture, sf::Keyboard::Key::LShift, 0, 1, {600.f,  baseY }, true) );
 }

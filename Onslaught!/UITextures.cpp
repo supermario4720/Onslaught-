@@ -32,6 +32,10 @@ void UITextures::loadAllTextures() {
     loadTexture("LongButtonPressed", "resources/buttonTextures/Button_Disable_3Slides.png");
 
     loadTexture("Pointer", "resources/TownPointer.png");
+
+    loadTexture("KeyboardButtons", "resources/buttonTextures/Keyboard_Letters_and_Symbols.png");
+    loadTexture("KeyboardExtraButtons", "resources/buttonTextures/Keyboard_Extras.png");
+
 }
 
 void UITextures::clearManager() {

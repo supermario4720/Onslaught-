@@ -348,13 +348,8 @@ void Enemy::updateAnimationState(sf::Vector2f moveVec) {
 void Enemy::calculateKnockback(sf::Vector2f damageOrigin) {
     currentKnockbackTime = 0.f;
     knockbackVector = sprite.getPosition() - damageOrigin;
-    
-    std::cout << "~~~~~~~~~~~~~~~~~~" << std::endl;
-    std::cout << damageOrigin.x << ", " << damageOrigin.y << std::endl;
-    std::cout << sprite.getPosition().x << ", " << sprite.getPosition().y << std::endl;
 
     if(knockbackVector.x != 0 || knockbackVector.y != 0) knockbackVector = knockbackVector.normalized()*3.f;
-
 }
 
 sf::Vector2f Enemy::chooseTarget(const BuildingManager& buildManager) {
