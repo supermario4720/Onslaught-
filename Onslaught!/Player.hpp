@@ -4,45 +4,51 @@
 #include "Hitbox.hpp"
 #include "Entity.hpp"
 #include "AnimationController.hpp"
+#include "PlayerStatusManager.hpp"
+
 
 class BuildingManager;
+class PlayerStatusManager;
 
 class Player : public Entity {
 private:
     // set ptr to self for collision check
     std::weak_ptr<Player> selfPtr;
     sf::CircleShape shape;
+    std::shared_ptr<Hitbox> playerHB;
+    std::vector<std::shared_ptr<TriggerHitbox>> activeAttacks;
+
 
     sf::Texture spriteSheet;
     sf::Sprite sprite;
     AnimationController animations;
+    AnimationController::State targetState = AnimationController::State::IdleRight;
+    PlayerStatusManager statusManager;
 
     float scale = 3.f;
     bool facingLeft = false;
     float spriteOffset = -25.f;
-
-
-    AnimationController::State targetState = AnimationController::State::IdleRight;
-
-    std::shared_ptr<Hitbox> playerHB;
-
-    float currentStamina;
-    float maxStamina;
-
-    float initialSpeed;
-    float speed;
     bool keyboardInput = true;
 
-    std::vector<std::shared_ptr<TriggerHitbox>> activeAttacks;
+
+    // player stats
     
-    sf::Angle facing;
-    sf::Vector2f movementVector;
-    // counter for deltaTime -> will print facing angle every 1 second
-    float tempTime = 0.f;
+    float healthRecoveryRate;
+    float maxStamina;
+    float currentStamina;
+    float staminaRecoveryRate;
 
     float attackSpeed;
     float attackRange;
     float attackDamage;
+
+    float currentSpeed;
+    float movementSpeed;
+
+
+    
+    sf::Angle facing;
+    sf::Vector2f movementVector;
 
     bool attackOnCD = false;
     bool attackHeld = false;
@@ -76,8 +82,17 @@ public:
     // return 2 floats (vector2f) of current/max stamina
     sf::Vector2f getStamina() const;
 
+    void setHealth(float newHealth);
+    void setHealthRecoverRate(float newRate);
+    void setStamina(float newStamina);
+    void setStaminaRevoverRate(float newRate);
+    void setDamage(float newDamage);
+    void setMoveSpeed(float newSpeed);
+
     void updateAnimationState(sf::Vector2f facing);
 
     void playFootstep();
+
+    PlayerStatusManager& getStatusManager();
 
 };

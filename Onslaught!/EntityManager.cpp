@@ -88,6 +88,7 @@ void EntityManager::start(Camera* cam) {
 void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	auto town = townPtr.lock();
 
+	//std::cout << "Running" << std::endl;
 	// if player or town doesn't exist or is not alive, return
 	if (!player || !player->checkAlive() ) {
 		playerAlive = false;
@@ -100,7 +101,7 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 		return;
 	}
 	playerPositionHolder = player->getPosition();
-	itemManager.update(dt, playerPositionHolder, playerInventory);
+	itemManager.update(dt, playerPositionHolder, playerInventory, player->getStatusManager());
 	buildManager.update(dt, playerPositionHolder, playerInventory, enemyManager, _window);
 	enemyManager.update(dt, buildManager);
 	objectManager.update(dt);
@@ -212,7 +213,11 @@ sf::Vector2f EntityManager::getPlayerStamina() {
 }
 
 void EntityManager::spawnItems(ItemID id, const sf::Vector2f& pos, int qty) {
-	itemManager.spawn(id, pos, qty);
+	itemManager.spawnItem(id, pos, qty);
+}
+
+void EntityManager::spawnExp(const sf::Vector2f& pos, int qty) {
+	itemManager.spawnExp(pos, qty);
 }
 
 int EntityManager::getNextEntityID() {

@@ -20,6 +20,7 @@ const sf::Texture& ItemTextures::getTexture(const std::string& name) const {
 
 void ItemTextures::loadAllTextures() {
     loadTexture("temp", "resources/buttonTextures/Button_Blue.png");
+    loadTexture("Experience","resources/buttonTextures/Button_Disable.png" );
 }
 
 void ItemTextures::clearManager() {

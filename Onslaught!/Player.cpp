@@ -6,8 +6,8 @@
 #include <iostream>
 
 Player::Player()
-    : Entity(100.f), initialSpeed(80.f), attackSpeed(550.f), attackRange(30.f), maxStamina(100.f), currentStamina(100.f),
-    spriteSheet("resources/dwarfx1.png"), sprite(spriteSheet)
+    : Entity(100.f), movementSpeed(80.f), attackSpeed(550.f), attackRange(30.f), maxStamina(100.f), currentStamina(100.f),
+    spriteSheet("resources/dwarfx1.png"), sprite(spriteSheet), statusManager( PlayerStatusManager() )
 {
     // setting corresponding IDs
     setTypeID(1);
@@ -20,7 +20,7 @@ Player::Player()
     shape.setOrigin({ rad, rad });
     shape.setPosition(pos);
     shape.setFillColor(sf::Color::Blue);
-    speed = initialSpeed;
+    currentSpeed = movementSpeed;
 
     movementVector = { 0.f, 0.f };
     facing = sf::degrees(0);
@@ -75,6 +75,7 @@ std::shared_ptr<Player> Player::create() {
     std::shared_ptr<Player> player = std::shared_ptr<Player>(new Player());
     player->initializePtr(player);
     player->initializeHitbox();
+    player->getStatusManager().setPlayerPtr(player);
     return player;
 }
 // create hitbox for player
@@ -127,12 +128,12 @@ void Player::handleInput(BuildingManager& buildManager) {
         // sprint -> if button pressed, make player move 1.5 times faster
         if (input.isKeyDown(sf::Keyboard::Key::LShift)) {
             if (currentStamina > 0.3f) {
-                speed = initialSpeed * 1.5f;
+                currentSpeed = movementSpeed * 1.5f;
                 currentStamina -= 0.3f;
                 dashing = true;
             }
             else {
-                speed = initialSpeed;
+                currentSpeed = movementSpeed;
                 dashing = false;
             }
             dashHeld = true;
@@ -140,7 +141,7 @@ void Player::handleInput(BuildingManager& buildManager) {
         else { 
             dashHeld = false; 
             dashing = false;
-            speed = initialSpeed;
+            currentSpeed = movementSpeed;
         }
 
         if (input.isKeyPressed(sf::Keyboard::Key::E)) {
@@ -182,7 +183,7 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
     // Normalize vector if non zero and multiply by movement speed
     if (movementVector.x != 0.f || movementVector.y != 0.f) {
         
-        movementVector = movementVector.normalized() * speed;
+        movementVector = movementVector.normalized() * currentSpeed;
     }
 
     movementVector *= dt;
@@ -288,8 +289,8 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
     if (fromCollision < 3.0f) fromCollision += dt;
     else {
         //replace 0.05f with regen speed
-        if (health + 0.02f > maxHealth) health = maxHealth;
-        else health += 0.02f;
+        if (health + healthRecoveryRate*dt > maxHealth) health = maxHealth;
+        else health += healthRecoveryRate*dt;
     }
     if (fromCollision > 0.1f) {
         sprite.setColor(sf::Color(255, 255, 255, 255));
@@ -297,8 +298,8 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
     }
     // recover stamina if not dashing or holding attack
     if (!dashHeld && !attackHeld) {
-        if (currentStamina + 1.f > maxStamina) currentStamina = maxStamina;
-        else currentStamina += 0.2f;
+        if (currentStamina + staminaRecoveryRate*dt > maxStamina) currentStamina = maxStamina;
+        else currentStamina += staminaRecoveryRate*dt;
     }
 
 }
@@ -422,4 +423,29 @@ void Player::playFootstep() {
     if (footstepSound.getStatus() != sf::Sound::Status::Playing) {
         aud.play("playerWalkFootstep");
     }
+}
+
+
+
+void Player::setHealth(float newHealth) {
+    maxHealth = newHealth;
+}
+void Player::setHealthRecoverRate(float newRate) {
+    healthRecoveryRate = newRate;
+}
+void Player::setStamina(float newStamina) {
+    maxStamina = newStamina;
+}
+void Player::setStaminaRevoverRate(float newRate) {
+    staminaRecoveryRate = newRate;
+}
+void Player::setDamage(float newDamage) {
+    attackDamage = newDamage;
+}
+void Player::setMoveSpeed(float newSpeed) {
+    movementSpeed = newSpeed;
+}
+
+PlayerStatusManager& Player::getStatusManager() {
+    return statusManager;
 }

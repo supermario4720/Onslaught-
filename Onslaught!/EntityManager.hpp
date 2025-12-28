@@ -64,6 +64,8 @@ public:
 
 	void spawnItems(ItemID id, const sf::Vector2f& pos, int qty);
 
+	void spawnExp(const sf::Vector2f& pos, int qty);
+
 	int getNextEntityID();
 
 	int getScore() const;
