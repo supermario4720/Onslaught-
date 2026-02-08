@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity.hpp"
 #include "BuildingData.hpp"
-#include "BuildingTextures.hpp"
+#include "TextureManager.hpp"
 #include "Hitbox.hpp"
 
 #include <SFML/System/Vector2.hpp>
@@ -14,14 +14,9 @@ class EnemyManager;
 class Building : public Entity {
 protected:
     std::weak_ptr<Building> selfPtr;
-    std::shared_ptr<Hitbox> buildingHitbox;
     BuildingID buildingID;
-    sf::Vector2f position;
-    sf::Sprite sprite;
 
-    int faction;
     bool expired;
-
 
 public:
     Building(BuildingID id, sf::Vector2f pos, int _faction = 0);

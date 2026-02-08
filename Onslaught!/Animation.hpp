@@ -1,39 +1,3 @@
-#pragma once
-/*
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
-
-class Animation {
-private:
-	sf::Sprite sprite;
-
-	int currentFrame;
-	int state;
-	float frameTimer;
-	int totalFrames;        // How many frames in animation
-	int frameWidth;        // Width of one frame
-	int frameHeight;       // Height of one frame
-	float frameSpeed;    // Seconds per frame
-public:
-    // In Player constructor
-    Animation(const sf::Texture& texture, const int totalFrames = 1,
-        const int frameWidth = 32, const int frameHeight = 32, const float frameSpeed = 0.1f);
-
-	void setParameters(const int _totalFrames = 1, const int _frameWidth = 32,
-		const int _frameHeight = 32, const float _frameSpeed = 0.1f);
-
-	void update(float dt);
-
-	void switchState(int _state);
-
-	void setPosition(sf::Vector2f pos);
-
-	void render(sf::RenderWindow& window);
-
-	void resetFrame();
-};
-*/
-
 // Animation.hpp
 #pragma once
 #include <SFML/Graphics/Sprite.hpp>

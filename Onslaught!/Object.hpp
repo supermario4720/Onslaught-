@@ -9,9 +9,6 @@ class Object : public Entity {
 private:
     ObjectID objID;
     std::weak_ptr<Object> selfPtr;
-
-    sf::Sprite sprite;
-    std::shared_ptr<Hitbox> objectHB;
 public:
     Object(ObjectID id, sf::Vector2f position);
     ~Object();

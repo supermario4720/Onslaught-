@@ -23,10 +23,7 @@
 #include "Object.hpp"
 #include "CollisionManager.hpp"
 #include "EntityManager.hpp"
-#include "UITextures.hpp"
-#include "ItemTextures.hpp"
-#include "BuildingTextures.hpp"
-#include "ObjectTextures.hpp"
+#include "TextureManager.hpp"
 
 #include <vector>
 #include <iostream>
@@ -35,10 +32,7 @@
 
 int main() {
     AudioManager::getInstance().loadAllSounds();
-    UITextures::getInstance().loadAllTextures();
-    ItemTextures::getInstance().loadAllTextures();
-    BuildingTextures::getInstance().loadAllTextures();
-    ObjectTextures::getInstance().loadAllTextures();
+    TextureManager::getInstance().loadAllTextures();
     // play noise at start so SFML loads sound properly
     AudioManager::getInstance().play("ButtonClick", 0.f);
 
@@ -255,9 +249,7 @@ int main() {
         window.display();
     }
     AudioManager::getInstance().clearManager();
-    UITextures::getInstance().clearManager();
-    ItemTextures::getInstance().clearManager();
-    BuildingTextures::getInstance().clearManager();
+    TextureManager::getInstance().clearManager();
     entityManager.clear();
     inputManager.clear();
     return 0;

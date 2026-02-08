@@ -5,9 +5,12 @@
 
 
 Building::Building(BuildingID id, sf::Vector2f pos, int _faction)
-: Entity( BuildingDatabase::get(id).health ), buildingID(id), position(pos), faction(_faction), expired(false),
-sprite( BuildingTextures::getInstance().getTexture( BuildingDatabase::get(id).texture ) )
+: Entity( TextureManager::getInstance().getTexture( BuildingDatabase::get(id).texture ), BuildingDatabase::get(id).health ),
+buildingID(id), expired(false)
 {
+	position = pos;
+	faction = _faction;
+
 	sf::Vector2f spriteSize = sprite.getGlobalBounds().size;
 	sf::Vector2f buildingSize = BuildingDatabase::get(id).size;
     sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
@@ -32,9 +35,9 @@ void Building::initializePtr(std::shared_ptr<Building> ptr) {
 }
 
 void Building::initializeHitbox() {
-    buildingHitbox = std::make_shared<Hitbox>(selfPtr, position, sprite.getGlobalBounds().size, faction);
-    buildingHitbox->changeVisibility(false);
-    CollisionManager::getInstance().addEntityHitbox(buildingHitbox);
+    entityHitbox = std::make_shared<Hitbox>(selfPtr, position, sprite.getGlobalBounds().size, faction);
+    entityHitbox->changeVisibility(false);
+    CollisionManager::getInstance().addEntityHitbox(entityHitbox);
 }
 
 void Building::onCollision(float damage, sf::Vector2f damageOrigin) {

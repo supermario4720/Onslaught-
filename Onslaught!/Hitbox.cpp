@@ -8,7 +8,7 @@
 // ------- Hitbox -------
 
 Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, sf::Vector2f size, int _faction, bool _isVisible)
-	:shapeType(0), lifetime(0.f), finished(false), isVisible(_isVisible), faction(_faction)
+	:shapeType(0), id(0), lifetime(0.f), finished(false), isVisible(_isVisible), faction(_faction)
 {
 	rectHB.setSize(size);
 	rectHB.setOrigin( size/2.f );
@@ -24,7 +24,7 @@ Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, sf::Vector2f 
 
 
 Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, float r, int _faction, bool _isVisible)
-	:shapeType(1), lifetime(0.f), finished(false), isVisible(_isVisible), faction(_faction)
+	:shapeType(1), id(0), lifetime(0.f), finished(false), isVisible(_isVisible), faction(_faction)
 {
 	circleHB.setRadius(r);
 	circleHB.setOrigin({ r, r });
@@ -37,6 +37,13 @@ Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, float r, int 
 	hitboxOwner = owner.lock();
 }
 
+void Hitbox::setID(int _id) {
+	id = _id;
+}
+
+int Hitbox::getID() {
+	return id;
+}
 
 void Hitbox::update(float dt) { lifetime += dt; }
 
@@ -95,10 +102,103 @@ const sf::CircleShape& Hitbox::getCircleHitbox() {
 	}
 }
 
-// that or use a movement vector pass
-void Hitbox::updateHitbox(sf::Vector2f newPosition) {
-	if (shapeType == 0) rectHB.setPosition(newPosition);
-	else if (shapeType == 1) circleHB.setPosition(newPosition);
+// Updated the hitbox position and returns the modified movement vector
+// Maybe add arguments for damage to trigger onCollision() here?
+sf::Vector2f Hitbox::updateHitbox(sf::Vector2f movementVec, bool doCollision, float damage) {
+	sf::CircleShape movedCircX = circleHB;
+    sf::CircleShape movedCircY = circleHB;
+	sf::RectangleShape movedRectX = rectHB;
+	sf::RectangleShape movedRectY = rectHB;
+	sf::Vector2f modifiedMovementVec = movementVec;
+
+	const std::vector<std::weak_ptr<Hitbox>>& entityHitboxes = CollisionManager::getInstance().getEntityHitboxList();
+    for (const auto& hitbox : entityHitboxes) {
+		bool collided = false;
+
+        // skip own or expired hitbox
+        if (hitbox.expired()) continue;
+        auto hb = hitbox.lock();
+        if (id == hb->getID()) continue;
+
+		if (shapeType == 0) {
+			movedRectX.move({ modifiedMovementVec.x, 0.f });
+			movedRectY.move({ 0.f, modifiedMovementVec.y });
+
+			// if hitbox type is rectangle
+			if (hb->getType() == 0) {
+				const auto& rect = hb->getRectHitbox().getGlobalBounds();
+				if ( movedRectX.getGlobalBounds().findIntersection(rect) ) {
+					// if collision on x axis, make x movement 0
+					modifiedMovementVec.x = 0.f;
+					collided = true;
+				}
+				if ( movedRectY.getGlobalBounds().findIntersection(rect) ) {
+					// if collision on y axis, make y movement 0
+					modifiedMovementVec.y = 0.f;
+					collided = true;
+				}
+			}
+			// if hitbox type is circle 
+			else if (hb->getType() == 1) {
+				const sf::CircleShape& circle = hb->getCircleHitbox();
+
+				if (CollisionManager::checkCircleRectCollision(circle, movedRectX)) {
+					// if collision on x axis, make x movement 0
+					modifiedMovementVec.x = 0.f;
+					collided = true;
+				}
+				if (CollisionManager::checkCircleRectCollision(circle, movedRectX)) {
+					// if collision on y axis, make y movement 0
+					modifiedMovementVec.y = 0.f;
+					collided = true;
+				}
+
+			}
+			// move the hitbox
+			rectHB.move(modifiedMovementVec);
+		}
+		
+		else if (shapeType == 1) {
+			movedCircX.move({ modifiedMovementVec.x, 0.f });
+			movedCircY.move({ 0.f, modifiedMovementVec.y });
+
+			// if hitbox type is rectangle
+			if (hb->getType() == 0) {
+				const sf::RectangleShape& rect = hb->getRectHitbox();
+				if (CollisionManager::checkCircleRectCollision(movedCircX, rect)) {
+					// if collision on x axis, make x movement 0
+					modifiedMovementVec.x = 0.f;
+					collided = true;
+				}
+				if (CollisionManager::checkCircleRectCollision(movedCircY, rect)) {
+					// if collision on y axis, make y movement 0
+					modifiedMovementVec.y = 0.f;
+					collided = true;
+				}
+			}
+			// if hitbox type is circle 
+			else if (hb->getType() == 1) {
+				const sf::CircleShape& circle = hb->getCircleHitbox();
+				
+				if (CollisionManager::checkCircleCollision(movedCircX, circle) || CollisionManager::checkCircleCollision(movedCircY, circle)) {
+					modifiedMovementVec = CollisionManager::slideAgainstCircle(movedCircX, circle, modifiedMovementVec);
+					collided = true;
+				}
+			}
+		}
+
+		if (doCollision && (faction != hb->getFaction()) ) {
+			hb->onCollision(damage, getPosition());
+			hitboxOwner.lock()->onAttack();
+        }
+
+	}
+
+	// move the hitbox using the modified movement vector
+	if (shapeType == 0) rectHB.move(movementVec);
+	else if (shapeType == 1) circleHB.move(movementVec);
+
+	return modifiedMovementVec;
 }
 
 void Hitbox::changeVisibility(bool vis) {

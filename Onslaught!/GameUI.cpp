@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "GameUI.hpp"
-#include "UITextures.hpp"
+#include "TextureManager.hpp"
 #include "Camera.hpp"
 #include "GameStateManager.hpp"
 #include "EntityManager.hpp"
@@ -12,7 +12,7 @@
 
 GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     : scoreText(font), timeText(font), currentHP(0.f), maxHP(0.f), currentStamina(0.f), maxStamina(0.f),
-    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font), cameraPtr(camPtr), townArrow(UITextures::getInstance().getTexture("Pointer"))
+    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font), cameraPtr(camPtr), townArrow(TextureManager::getInstance().getTexture("Pointer"))
 {
     townBounds = sf::FloatRect({0.f, 0.f}, {0.f, 0.f});
     screenWidth = (float)window.getSize().x;
@@ -181,8 +181,8 @@ void GameUI::checkTownOnScreen(sf::Vector2f& pos, sf::Vector2f& size) {
 
 
 void GameUI::setKeyboardTexture() {
-    auto& keyboardTexture = UITextures::getInstance().getTexture("KeyboardButtons");
-    auto& keyboardExtraTexture = UITextures::getInstance().getTexture("KeyboardExtraButtons");
+    auto& keyboardTexture = TextureManager::getInstance().getTexture("KeyboardButtons");
+    auto& keyboardExtraTexture = TextureManager::getInstance().getTexture("KeyboardExtraButtons");
     keyboardButtons.clear();
 
     float baseY = screenHeight - 60.f;

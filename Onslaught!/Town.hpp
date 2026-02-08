@@ -12,10 +12,9 @@ private:
 	std::weak_ptr<Town> selfPtr;
 	sf::RectangleShape rect;
 
-	sf::Texture normalTexture;
-	sf::Texture damageTexture;
-	sf::Texture destroyedTexture;
-	sf::Sprite sprite;
+	const sf::Texture& normalTexture;
+	const sf::Texture& damageTexture;
+	const sf::Texture& destroyedTexture;
 
 	float spriteOffset = 10.f;
 

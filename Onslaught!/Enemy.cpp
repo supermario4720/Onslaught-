@@ -5,12 +5,13 @@
 #include "BuildingManager.hpp"
 #include "Building.hpp"
 #include "AudioManager.hpp"
+#include "TextureManager.hpp"
 #include <iostream>
 
 
 Enemy::Enemy(sf::Vector2f initPos, float enemySize, float speed)
-    :Entity(100.f), size(enemySize), movementSpeed(speed), entityManager(EntityManager::getInstance()),
-    spriteSheet("resources/skeleton.png"), sprite(spriteSheet), detectionRadius(150.f)
+    :Entity( TextureManager::getInstance().getTexture( "Enemy" ), 100.f), size(enemySize), 
+    movementSpeed(speed), entityManager(EntityManager::getInstance()), detectionRadius(150.f)
 {
     // setting corresponding IDs
     setTypeID(2);
@@ -120,85 +121,9 @@ void Enemy::update(float dt, const BuildingManager& buildManager) {
     sf::Vector2f targetPos = chooseTarget(buildManager);
     movementVector = targetPos - getPosition();
 
-    // turn to unit vector, then multiply by speed
-    if (movementVector.x != 0.f || movementVector.y != 0.f) {
-        movementVector = movementVector.normalized();
-        facing = movementVector.angle().wrapUnsigned().asDegrees();
+    updatePosition(movementVector, dt);
+    if (!isTakingDamage) updateAnimationState(movementVector);
 
-        movementVector = movementVector + knockbackVector;
-        movementVector *= movementSpeed*dt;
-        //audio.play("enemyFootstep", false, 50.f);
-    }
-
-    sf::CircleShape movedShapeX = enemy;
-    sf::CircleShape movedShapeY = enemy;
-
-    sf::Vector2f tempMoveVec = movementVector;
-
-    if (!isTakingDamage) updateAnimationState(tempMoveVec);
-
-    const std::vector<std::weak_ptr<Hitbox>>& entityHitboxes = CollisionManager::getInstance().getEntityHitboxList();
-    for (const auto& hitbox : entityHitboxes) {
-        bool collided = false;
-        // skip own or expired hitbox
-        if (hitbox.expired()) {
-            continue;
-        }
-        auto hb = hitbox.lock();
-        if (hb.get() == enemyHB.get()) {
-            continue;
-        }
-
-        movedShapeX = enemy;
-        movedShapeY = enemy;
-        movedShapeX.move({ tempMoveVec.x, 0.f });
-        movedShapeY.move({ 0.f, tempMoveVec.y });
-
-        // if hitbox type is rectangle
-        if (hb->getType() == 0) {
-            const sf::RectangleShape& rect = hb->getRectHitbox();
-            if (CollisionManager::checkCircleRectCollision(movedShapeX, rect)) {
-                // if collision on x axis, make x movement 0
-                tempMoveVec.x = 0.f;
-                collided = true;
-            }
-            if (CollisionManager::checkCircleRectCollision(movedShapeY, rect)) {
-                // if collision on y axis, make y movement 0
-                tempMoveVec.y = 0.f;
-                collided = true;
-            }
-        }
-        // if hitbox type is circle 
-        else if (hb->getType() == 1) {
-            const sf::CircleShape& circle = hb->getCircleHitbox();
-            
-            if (CollisionManager::checkCircleCollision(movedShapeX, circle) || CollisionManager::checkCircleCollision(movedShapeY, circle)) {
-                tempMoveVec = CollisionManager::slideAgainstCircle(enemy, circle, tempMoveVec);
-                collided = true;
-            }
-        }
-
-        if (collided && !isAttacking && !isTakingDamage) {
-            if (hb->getFaction() != faction) {
-                hb->onCollision(attackDamage, sprite.getPosition());
-                if (facing < 45.f || facing > 315.f) {
-                    targetState = AnimationController::State::AttackRight;
-                }
-                if (facing <= 135.f && facing >= 45.f) {
-                    targetState = AnimationController::State::AttackDown;
-                }
-                if (facing < 225.f && facing > 135.f) {
-                    targetState = AnimationController::State::AttackRight;
-                    facingLeft = true;
-                }
-                if (facing <= 315.f && facing >= 225.f) {
-                    targetState = AnimationController::State::AttackUp;
-                }
-                audio.play("enemyAttack", false, 30.f);
-            }
-            isAttacking = true;
-        }
-    }
     CollisionManager::getInstance().removeExpiredHitboxes();
 
 
@@ -232,12 +157,6 @@ void Enemy::update(float dt, const BuildingManager& buildManager) {
     else {
         sprite.setScale({ scale, scale });
     }
-
-    
-    enemy.move(tempMoveVec);
-    sf::Vector2f newPos = enemy.getPosition();
-    enemyHB->updateHitbox(newPos);
-    sprite.setPosition({ newPos.x, newPos.y + spriteOffset });
 
     if (fromCollision < 1.0f) fromCollision += dt;
     if (fromCollision > invincibility) {
@@ -289,6 +208,24 @@ void Enemy::onCollision(float damage, sf::Vector2f damageOrigin) {
             targetState = AnimationController::State::Death;
         }
     }
+}
+
+void Enemy::onAttack() {
+    if (facing < 45.f || facing > 315.f) {
+        targetState = AnimationController::State::AttackRight;
+    }
+    if (facing <= 135.f && facing >= 45.f) {
+        targetState = AnimationController::State::AttackDown;
+    }
+    if (facing < 225.f && facing > 135.f) {
+        targetState = AnimationController::State::AttackRight;
+        facingLeft = true;
+    }
+    if (facing <= 315.f && facing >= 225.f) {
+        targetState = AnimationController::State::AttackUp;
+    }
+    AudioManager::getInstance().play("enemyAttack", false, 30.f);
+    isAttacking = true;
 }
 
 void Enemy::onDeath() {

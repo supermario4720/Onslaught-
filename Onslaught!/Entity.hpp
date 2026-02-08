@@ -1,12 +1,25 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <iostream>
+#include "AnimationController.hpp"
+
+class Hitbox;
 
 // base class for all entities
 class Entity : public std::enable_shared_from_this<Entity> {
 protected:
 	sf::Vector2f position;
+	std::shared_ptr<Hitbox> entityHitbox;
+
+	const sf::Texture& spriteSheet;
+	sf::Sprite sprite;
+	AnimationController animations;
+	AnimationController::State targetState = AnimationController::State::IdleRight;
+
+
 	float maxHealth;
 	float health;
 	bool isAlive;
@@ -15,6 +28,9 @@ protected:
 
 	float fromCollision;
 	sf::Vector2f knockbackVector = {0.f, 0.f};
+	float facing = 0.f;
+	bool facingLeft = false;
+	float movementSpeed = 80.f;
 	float invincibility;
 
 	// Each instance of entity should be assigned a unique identifier
@@ -29,19 +45,23 @@ protected:
 
 public:
 	// Entity constructer without specifying current health
-	Entity(float _maxHealth, bool destructable = true, bool alive = true);
+	Entity(const sf::Texture& tex, float _maxHealth, bool destructable = true, bool alive = true);
 	// constructer with health specification
-	Entity(float _maxHealth, float _health, bool destructable = true, bool alive = true);
+	Entity(const sf::Texture& tex, float _maxHealth, float _health, bool destructable = true, bool alive = true);
 
 	virtual void initializeHitbox();
 
 	virtual void onCollision(float damage, sf::Vector2f damageOrigin);
+
+	virtual void onAttack();
 
 	virtual void update(float dt);
 
 	virtual float getSize();
 
 	virtual const sf::Vector2f getPosition() const;
+
+	virtual void updatePosition(sf::Vector2f movementVec, float dt);
 
 	virtual float getDirection();
 

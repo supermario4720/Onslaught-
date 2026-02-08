@@ -3,11 +3,13 @@
 #include "InputManager.hpp"
 #include "AudioManager.hpp"
 #include "BuildingManager.hpp"
+#include "TextureManager.hpp"
 #include <iostream>
 
 Player::Player()
-    : Entity(100.f), movementSpeed(80.f), attackSpeed(550.f), attackRange(30.f), maxStamina(100.f), currentStamina(100.f),
-    spriteSheet("resources/dwarfx1.png"), sprite(spriteSheet), statusManager( PlayerStatusManager() )
+    : Entity(TextureManager::getInstance().getTexture( "Player" ), 100.f), movementSpeed(80.f),
+    attackSpeed(550.f), attackRange(30.f), maxStamina(100.f), currentStamina(100.f),
+    statusManager( PlayerStatusManager() )
 {
     // setting corresponding IDs
     setTypeID(1);
@@ -179,59 +181,7 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
     // update inputs
     handleInput(buildManager);
     //std::cout << movementVector.x << ", " << movementVector.y << std::endl;
-
-    // Normalize vector if non zero and multiply by movement speed
-    if (movementVector.x != 0.f || movementVector.y != 0.f) {
-        
-        movementVector = movementVector.normalized() * currentSpeed;
-    }
-
-    movementVector *= dt;
-    
-    if (movementVector.x != 0.f || movementVector.y != 0.f) {
-        audio.play("playerWalkFootstep", false, 20.f);
-        facing = movementVector.angle().wrapSigned();
-    }
-
-    // apply changes virtually to check for collision
-    sf::CircleShape movedShapeX = shape;
-    sf::CircleShape movedShapeY = shape;
-
-    movedShapeX.move( { movementVector.x, 0.f} );
-    movedShapeY.move( { 0.f, movementVector.y} );
-
-
-    std::vector<std::weak_ptr<Hitbox>>& entityHitboxes = CollisionManager::getInstance().getEntityHitboxList();
-    for (auto entityIteration = entityHitboxes.begin(); entityIteration != entityHitboxes.end();) {
-        if (entityIteration->expired()) {
-            entityIteration++;
-            continue;
-        }
-        auto hitbox = entityIteration->lock();
-        // skip own hitbox
-        if (hitbox.get() == playerHB.get()) {
-            entityIteration++;
-            continue;
-        }
-        // if hitbox type is rectangle
-        if (hitbox->getType() == 0) {
-            const sf::RectangleShape& rect = hitbox -> getRectHitbox();
-            if ( CollisionManager::checkCircleRectCollision(movedShapeX, rect ) ) {
-                // if collision on x axis, make x movement 0
-                movementVector.x = 0.f;
-            }
-            if (CollisionManager::checkCircleRectCollision(movedShapeY, rect) ) {
-                // if collision on y axis, make y movement 0
-                movementVector.y = 0.f;
-            }
-        }
-        // if hitbox type is circle 
-        else if (hitbox-> getType() == 1) {
-            const sf::CircleShape& circle = hitbox-> getCircleHitbox();
-            movementVector = CollisionManager::slideAgainstCircle(shape, circle, movementVector);
-        }
-        entityIteration++;
-    }
+    updatePosition(movementVector, dt);
     CollisionManager::getInstance().removeExpiredHitboxes();
 
     /*
@@ -266,10 +216,10 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
         sprite.setScale({ scale, scale });
     }
 
-    shape.move(movementVector);
-    sf::Vector2f newPos = shape.getPosition();
-    playerHB->updateHitbox(newPos);
-    sprite.setPosition({ newPos.x, newPos.y + spriteOffset });
+    // shape.move(movementVector);
+    // sf::Vector2f newPos = shape.getPosition();
+    // playerHB->updateHitbox(newPos);
+    // sprite.setPosition({ newPos.x, newPos.y + spriteOffset });
     
     // update attack boxes
     for (auto attack = activeAttacks.begin(); attack != activeAttacks.end(); ) {
@@ -302,6 +252,32 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
         else currentStamina += staminaRecoveryRate*dt;
     }
 
+}
+
+void Player::updatePosition(sf::Vector2f movementVec, float dt) {
+    sf::Vector2f fixedMovementVec = movementVec;
+     // turn to unit vector, then multiply by speed
+    if (fixedMovementVec.x != 0.f || fixedMovementVec.y != 0.f) {
+        fixedMovementVec = fixedMovementVec.normalized();
+        facing = movementVector.angle().wrapSigned();
+
+        fixedMovementVec = fixedMovementVec + knockbackVector;
+        fixedMovementVec *= currentSpeed*dt;
+
+        AudioManager::getInstance().play("playerWalkFootstep", false, 20.f);
+
+        std::cout << "Before Hitbox" << fixedMovementVec.x << ", " << fixedMovementVec.y << std::endl;
+
+        sf::Vector2f collidedVec = entityHitbox->updateHitbox(fixedMovementVec);
+
+        std::cout << "After Hitbox" << fixedMovementVec.x << ", " << fixedMovementVec.y << std::endl;
+        
+        shape.move(collidedVec);
+        sprite.move(collidedVec);
+    }
+    else {
+        return;
+    }
 }
 
 void Player::onCollision(float damage, sf::Vector2f damageOrigin) {

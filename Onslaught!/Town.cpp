@@ -3,13 +3,16 @@
 #include "Hitbox.hpp"
 #include "CollisionManager.hpp"
 #include "AudioManager.hpp"
+#include "TextureManager.hpp"
 //#include <iostream>
 
 
 Town::Town()
-	:Entity(200.f), playerNear(false), interactionRadius(50.f),
-	normalTexture("resources/Castle_Blue.png"),damageTexture("resources/Castle_Red.png"), 
-	destroyedTexture("resources/Castle_Destroyed.png"), sprite(normalTexture)
+	: normalTexture( TextureManager::getInstance().getTexture( "TownNormal" ) ), 
+	damageTexture( TextureManager::getInstance().getTexture( "TownHurt" ) ), 
+	destroyedTexture( TextureManager::getInstance().getTexture( "TownDestroyed" ) ),
+	Entity(TextureManager::getInstance().getTexture( "TownNormal" ), 200.f),
+	playerNear(false), interactionRadius(50.f)
 {
 	// setting corresponding IDs
 	setTypeID(0);

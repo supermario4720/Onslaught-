@@ -17,6 +17,8 @@ CollisionManager::~CollisionManager() {
 }
 
 void CollisionManager::addEntityHitbox(std::shared_ptr<Hitbox> hb) {
+	hb->setID(nextID);
+	nextID += 1;
 	entityHitboxes.push_back(hb);
 }
 
@@ -176,4 +178,5 @@ bool CollisionManager::checkAllCollision(sf::RectangleShape& self) {
 
 void CollisionManager::clear() {
 	entityHitboxes.clear();
+	nextID = 0;
 }

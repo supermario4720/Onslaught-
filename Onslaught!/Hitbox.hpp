@@ -21,6 +21,8 @@ protected:
 	bool isVisible;
 	// 0 = player, 1 = enemy, 2 = object
 	int faction;
+	// Collision 確認時に使う
+	int id;
 
 public:
 	std::weak_ptr<Entity> hitboxOwner;
@@ -30,6 +32,10 @@ public:
 	Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, float r, int _faction = 0, bool _isVisible = false);
 
 	virtual ~Hitbox() = default;
+
+	void setID(int _id);
+
+	int getID();
 
 	virtual void update(float dt);
 
@@ -50,8 +56,8 @@ public:
 	
 	virtual const sf::CircleShape& getCircleHitbox();
 
-	// that or use a movement vector pass
-	virtual void updateHitbox(sf::Vector2f newPosition);
+	// update the hitbox, and return the modified movement vector
+	virtual sf::Vector2f updateHitbox(sf::Vector2f movementVec, bool doCollision = false, float damage = 0);
 
 	void changeVisibility(bool vis);
 	// instead, get owner ptr and call collision from there

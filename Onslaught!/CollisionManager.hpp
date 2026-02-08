@@ -9,6 +9,7 @@ class CollisionManager {
 private:
 	// contains hitboxes that can't overlap (blocking hitboxes)
 	std::vector<std::weak_ptr<Hitbox>> entityHitboxes;
+	int nextID = 0;
 
 public:
 	static CollisionManager& getInstance();

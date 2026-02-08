@@ -15,8 +15,6 @@ private:
 	// sf::Vector2f homePos;
 
 	sf::CircleShape enemy;
-	sf::Texture spriteSheet;
-	sf::Sprite sprite;
 	AnimationController animations;
 	AnimationController::State targetState = AnimationController::State::IdleRight;
 
@@ -55,6 +53,8 @@ public:
 	//void update(float dt, sf::Vector2f playerPos);
 	// instead of passing playerPos, read it from inside update -> make player be publically known
 	void onCollision(float damage, sf::Vector2f damageOrigin) override;
+
+	void onAttack() override;
 
 	void onDeath() override;
 

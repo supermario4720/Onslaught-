@@ -1,10 +1,10 @@
 #include "Experience.hpp"
-#include "ItemTextures.hpp"
+#include "TextureManager.hpp"
 
 
 Experience::Experience(const sf::Vector2f& pos, int qty)
     : quantity(qty), position(pos), 
-    sprite(ItemTextures::getInstance().getTexture( "Experience" ))
+    sprite(TextureManager::getInstance().getTexture( "Experience" ))
 {
     auto bounds = sprite.getLocalBounds();
     sprite.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });

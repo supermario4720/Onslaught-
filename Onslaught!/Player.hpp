@@ -18,9 +18,6 @@ private:
     std::shared_ptr<Hitbox> playerHB;
     std::vector<std::shared_ptr<TriggerHitbox>> activeAttacks;
 
-
-    sf::Texture spriteSheet;
-    sf::Sprite sprite;
     AnimationController animations;
     AnimationController::State targetState = AnimationController::State::IdleRight;
     PlayerStatusManager statusManager;
@@ -69,12 +66,13 @@ public:
     void update(float deltaTime) override;
     // created player exclusive update function because it would need different parameters
     void updatePlayer(float dt, BuildingManager& buildManager);
+    void updatePosition(sf::Vector2f movementVec, float dt) override;
     void onCollision(float damage, sf::Vector2f damageOrigin) override;
     void render(sf::RenderWindow& window) override;
     float getDirection() override;
     float getSize() override;
 
-    void onAttack();
+    void onAttack() override;
     const sf::Vector2f getPosition() const override;
     sf::CircleShape getShape() const;
     // return 2 floats (vector2f) of current/max hp

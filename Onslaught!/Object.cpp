@@ -2,14 +2,13 @@
 
 #include "Object.hpp"
 #include "ObjectData.hpp"
-#include "ObjectTextures.hpp"
+#include "TextureManager.hpp"
 #include "CollisionManager.hpp"
 #include "EntityManager.hpp"
 
 
 Object::Object(ObjectID id, sf::Vector2f position)
-    : Entity(ObjectDatabase::get(id).maxHealth), objID(id),
-    sprite(ObjectTextures::getInstance().getTexture(id))
+    : Entity(TextureManager::getInstance().getTexture(id), ObjectDatabase::get(id).maxHealth), objID(id)
 {
     // setting corresponding IDs
     setTypeID(3);
@@ -34,8 +33,9 @@ Object::Object(ObjectID id, sf::Vector2f position)
     sprite.setPosition({position.x, position.y + spriteOffset});
 
 }
+
 Object::~Object() {
-    CollisionManager::getInstance().removeEntityHitbox(objectHB);
+    CollisionManager::getInstance().removeEntityHitbox(entityHitbox);
 }
 
 std::shared_ptr<Object> Object::create(ObjectID id, sf::Vector2f position) {
@@ -48,12 +48,12 @@ std::shared_ptr<Object> Object::create(ObjectID id, sf::Vector2f position) {
 void Object::initializeHitbox() {
     const ObjectData& obj = ObjectDatabase::get(objID);
     if(obj.rad == 0.f) {
-        objectHB = std::make_shared<Hitbox>(selfPtr, sprite.getPosition(), obj.size, 2);
-        CollisionManager::getInstance().addEntityHitbox(objectHB);
+        entityHitbox = std::make_shared<Hitbox>(selfPtr, sprite.getPosition(), obj.size, 2);
+        CollisionManager::getInstance().addEntityHitbox(entityHitbox);
     }
     else{
-        objectHB = std::make_shared<Hitbox>(selfPtr, sprite.getPosition(), obj.rad, 2);
-        CollisionManager::getInstance().addEntityHitbox(objectHB);
+        entityHitbox = std::make_shared<Hitbox>(selfPtr, sprite.getPosition(), obj.rad, 2);
+        CollisionManager::getInstance().addEntityHitbox(entityHitbox);
     }
 }
 
