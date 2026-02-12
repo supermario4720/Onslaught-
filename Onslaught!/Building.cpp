@@ -36,7 +36,6 @@ void Building::initializePtr(std::shared_ptr<Building> ptr) {
 
 void Building::initializeHitbox() {
     entityHitbox = std::make_shared<Hitbox>(selfPtr, position, sprite.getGlobalBounds().size, faction);
-    entityHitbox->changeVisibility(false);
     CollisionManager::getInstance().addEntityHitbox(entityHitbox);
 }
 
@@ -71,6 +70,8 @@ void Building::update(float dt, EnemyManager& enemyManager) {
 
 void Building::render(sf::RenderWindow& window) {
     window.draw(sprite);
+	entityHitbox->render(window);
+
 }
 
 bool Building::isExpired() const {

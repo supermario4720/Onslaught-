@@ -82,9 +82,8 @@ std::shared_ptr<Player> Player::create() {
 }
 // create hitbox for player
 void Player::initializeHitbox() {
-    playerHB = std::make_shared<Hitbox>( selfPtr, shape.getPosition(), shape.getRadius(), 0);
-    playerHB->changeVisibility(false);
-    CollisionManager::getInstance().addEntityHitbox(playerHB);
+    entityHitbox = std::make_shared<Hitbox>( selfPtr, shape.getPosition(), shape.getRadius(), 0);
+    CollisionManager::getInstance().addEntityHitbox(entityHitbox);
 }
 
 void Player::initializePtr(std::shared_ptr<Player> ptr) {
@@ -218,7 +217,7 @@ void Player::updatePlayer(float dt, BuildingManager& buildManager) {
 
     // shape.move(movementVector);
     // sf::Vector2f newPos = shape.getPosition();
-    // playerHB->updateHitbox(newPos);
+    // entityHitbox->updateHitbox(newPos);
     // sprite.setPosition({ newPos.x, newPos.y + spriteOffset });
     
     // update attack boxes
@@ -266,11 +265,11 @@ void Player::updatePosition(sf::Vector2f movementVec, float dt) {
 
         AudioManager::getInstance().play("playerWalkFootstep", false, 20.f);
 
-        std::cout << "Before Hitbox" << fixedMovementVec.x << ", " << fixedMovementVec.y << std::endl;
+        //std::cout << "Before Hitbox" << fixedMovementVec.x << ", " << fixedMovementVec.y << std::endl;
 
         sf::Vector2f collidedVec = entityHitbox->updateHitbox(fixedMovementVec);
 
-        std::cout << "After Hitbox" << fixedMovementVec.x << ", " << fixedMovementVec.y << std::endl;
+        //std::cout << "After Hitbox" << fixedMovementVec.x << ", " << fixedMovementVec.y << std::endl;
         
         shape.move(collidedVec);
         sprite.move(collidedVec);
@@ -305,6 +304,7 @@ void Player::onCollision(float damage, sf::Vector2f damageOrigin) {
 void Player::render(sf::RenderWindow& window) {
     // window.draw(shape);
     window.draw(sprite);
+    entityHitbox->render(window);
     for (auto& hb : activeAttacks) hb -> render(window);
 }
 

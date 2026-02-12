@@ -37,6 +37,7 @@ void ArcherTower::update(float dt, EnemyManager& enemyManager) {
 
 void ArcherTower::render(sf::RenderWindow& window) {
     window.draw(sprite);
+    entityHitbox->render(window);
     for (auto& arrow : arrows) {
         if (arrow.alive)
             window.draw(arrow.shape);

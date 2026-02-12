@@ -15,14 +15,10 @@ private:
 	// sf::Vector2f homePos;
 
 	sf::CircleShape enemy;
-	AnimationController animations;
-	AnimationController::State targetState = AnimationController::State::IdleRight;
 
 	float scale = 3.f;
 	bool facingLeft = false;
 	float spriteOffset = -15.f;
-
-	std::shared_ptr<Hitbox> enemyHB;
 
 	float facing;
 	sf::Vector2f movementVector;
@@ -60,6 +56,8 @@ public:
 
 	void update(float dt) override;
 	virtual void update(float dt, const BuildingManager& buildManager);
+
+	void updatePosition(sf::Vector2f movementVec, float dt) override;
 
 	void render(sf::RenderWindow& window) override;
 

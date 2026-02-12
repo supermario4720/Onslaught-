@@ -85,8 +85,8 @@ Enemy::~Enemy() {
 
 // create hitbox for player
 void Enemy::initializeHitbox() {
-    enemyHB = std::make_shared<Hitbox>(selfPtr, getPosition(), size, 1);
-    CollisionManager::getInstance().addEntityHitbox(enemyHB);
+    entityHitbox = std::make_shared<Hitbox>(selfPtr, getPosition(), size, 1);
+    CollisionManager::getInstance().addEntityHitbox(entityHitbox);
 }
 
 void Enemy::initializePtr(std::shared_ptr<Enemy> ptr) {
@@ -172,6 +172,24 @@ void Enemy::update(float dt, const BuildingManager& buildManager) {
     //std::cout << fromCollision << std::endl;
 }
 
+void Enemy::updatePosition(sf::Vector2f movementVec, float dt) {
+    sf::Vector2f fixedMovementVec = movementVec;
+    // turn to unit vector, then multiply by speed
+    if (fixedMovementVec.x != 0.f || fixedMovementVec.y != 0.f) {
+        fixedMovementVec = fixedMovementVec.normalized();
+        facing = fixedMovementVec.angle().wrapUnsigned().asDegrees();
+
+        fixedMovementVec = fixedMovementVec + knockbackVector;
+        fixedMovementVec *= movementSpeed * dt;
+
+        sf::Vector2f collidedVec = entityHitbox->updateHitbox(fixedMovementVec, true, attackDamage);
+        sprite.move(collidedVec);
+    }
+    else {
+        return;
+    }
+}
+
 void Enemy::onCollision(float damage, sf::Vector2f damageOrigin) {
     //std::cout << "enemy collide" << std::endl;
     if (fromCollision > invincibility && targetState != AnimationController::State::Death) {
@@ -240,12 +258,13 @@ const sf::Vector2f Enemy::getPosition() const {
 }
 
 const std::weak_ptr<Hitbox> Enemy::getHitbox() const {
-    return enemyHB;
+    return entityHitbox;
 }
 
 void Enemy::render(sf::RenderWindow& window) {
     //window.draw(enemy);
     window.draw(sprite);
+    entityHitbox->render(window);
 }
 
 void Enemy::updateAnimationState(sf::Vector2f moveVec) {

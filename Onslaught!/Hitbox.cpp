@@ -20,6 +20,9 @@ Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, sf::Vector2f 
 
 	hitboxOwner = owner;
 	faction = owner.lock()->getFaction();
+
+	isVisible = true;
+
 }
 
 
@@ -35,6 +38,8 @@ Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, float r, int 
 	rectHB.setSize({ 0.f, 0.f });
 
 	hitboxOwner = owner.lock();
+
+	isVisible = true;
 }
 
 void Hitbox::setID(int _id) {
@@ -152,12 +157,8 @@ sf::Vector2f Hitbox::updateHitbox(sf::Vector2f movementVec, bool doCollision, fl
 					modifiedMovementVec.y = 0.f;
 					collided = true;
 				}
-
 			}
-			// move the hitbox
-			rectHB.move(modifiedMovementVec);
 		}
-		
 		else if (shapeType == 1) {
 			movedCircX.move({ modifiedMovementVec.x, 0.f });
 			movedCircY.move({ 0.f, modifiedMovementVec.y });
@@ -187,7 +188,7 @@ sf::Vector2f Hitbox::updateHitbox(sf::Vector2f movementVec, bool doCollision, fl
 			}
 		}
 
-		if (doCollision && (faction != hb->getFaction()) ) {
+		if (collided && doCollision && (faction != hb->getFaction()) ) {
 			hb->onCollision(damage, getPosition());
 			hitboxOwner.lock()->onAttack();
         }
@@ -195,8 +196,8 @@ sf::Vector2f Hitbox::updateHitbox(sf::Vector2f movementVec, bool doCollision, fl
 	}
 
 	// move the hitbox using the modified movement vector
-	if (shapeType == 0) rectHB.move(movementVec);
-	else if (shapeType == 1) circleHB.move(movementVec);
+	if (shapeType == 0) rectHB.move(modifiedMovementVec);
+	else if (shapeType == 1) circleHB.move(modifiedMovementVec);
 
 	return modifiedMovementVec;
 }
@@ -207,7 +208,7 @@ void Hitbox::changeVisibility(bool vis) {
 
 void Hitbox::onCollision(float damage, sf::Vector2f damageSource) {
 	if (auto entity = hitboxOwner.lock()) {
-		auto owner = hitboxOwner.lock();
+		// auto owner = hitboxOwner.lock();
 		// std::cout << owner->getPosition().x << ", " << owner->getPosition().y << std::endl;
 		entity->onCollision(damage, damageSource);
 	}

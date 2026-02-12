@@ -18,8 +18,6 @@ private:
 
 	float spriteOffset = 10.f;
 
-	std::shared_ptr<Hitbox> townHB;
-
 	bool playerNear = false;
 
 	float interactionRadius;

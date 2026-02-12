@@ -83,7 +83,7 @@ public:
 
 };
 
-inline int randInt(int min, float max) {
+inline int randInt(int min, int max) {
 	int range = max - min;
 	return min + ( std::rand() % range );
 }

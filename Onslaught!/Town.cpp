@@ -57,9 +57,8 @@ void Town::initializePtr(std::shared_ptr<Town> town) {
 }
 
 void Town::initializeHitbox() {
-	townHB = std::make_shared<Hitbox>(selfPtr, rect.getPosition(), rect.getSize(), 0);
-	townHB->changeVisibility(false);
-	CollisionManager::getInstance().addEntityHitbox(townHB);
+	entityHitbox = std::make_shared<Hitbox>(selfPtr, rect.getPosition(), rect.getSize(), 0);
+	CollisionManager::getInstance().addEntityHitbox(entityHitbox);
 }
 
 
@@ -99,6 +98,7 @@ void Town::update(float dt) {
 void Town::render(sf::RenderWindow& window) {
 	//window.draw(rect);
 	window.draw(sprite);
+	entityHitbox->render(window);
 }
 
 void Town::checkPlayerNear(sf::Vector2f playerPos) {

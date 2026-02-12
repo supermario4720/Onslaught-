@@ -15,11 +15,8 @@ private:
     // set ptr to self for collision check
     std::weak_ptr<Player> selfPtr;
     sf::CircleShape shape;
-    std::shared_ptr<Hitbox> playerHB;
     std::vector<std::shared_ptr<TriggerHitbox>> activeAttacks;
 
-    AnimationController animations;
-    AnimationController::State targetState = AnimationController::State::IdleRight;
     PlayerStatusManager statusManager;
 
     float scale = 3.f;
