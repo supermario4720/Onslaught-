@@ -81,7 +81,7 @@ void GameUI::update(float dt, sf::RenderWindow& window, InventoryUI& inventory) 
     std::stringstream timeStream;
     float time = entMan.getTime();
     // change timer to red when past 2 minutes (wave start)
-    if(time > 20.f) timeText.setFillColor(sf::Color(255, 155, 155, 235));
+    if(time > 120.f) timeText.setFillColor(sf::Color(255, 5, 5, 235));
     else timeText.setFillColor(sf::Color(255, 255, 255, 235));
     
     timeStream << std::fixed << std::setprecision(2) << time;

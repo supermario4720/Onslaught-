@@ -27,13 +27,6 @@ public:
 		return entityHitboxes;
 	}
 
-
-	/*
-	const std::vector<std::weak_ptr<TriggerHitbox>>& getHitboxList() const {
-		return triggerHitboxes;
-	}
-	*/
-
 	void update(float dt);
 
 	// collision checking functions
