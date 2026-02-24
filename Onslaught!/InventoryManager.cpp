@@ -168,7 +168,7 @@ void InventoryManager::updateSlotTextures(float screenW, float screenH) {
         sf::Vector2f spriteSize = slot.sprite.getGlobalBounds().size;
         float scaleX = 60.f / spriteSize.x;
         float scaleY = 60.f / spriteSize.y;
-        slot.sprite.setScale({2.f, 2.f});
+        slot.sprite.setScale({scaleX, scaleY});
         slot.sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
 
         float row = (float)(i/5 + 1);
