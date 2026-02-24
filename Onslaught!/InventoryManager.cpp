@@ -38,7 +38,7 @@ int InventoryManager::addItem(ItemID id, int amount) {
             // First, check slots with the same item and not full
             if(slot.id == ItemID::None) {
                 slot.id = id;
-                slot.sprite.setTexture( TextureManager::getInstance().getTexture("temp") );
+                slot.sprite.setTexture( TextureManager::getInstance().getTexture(id) );
                 const int canAdd = std::min(remaining, (maxStack - slot.quantity) );
                 slot.quantity += canAdd;
                 slot.qtyText.setString(std::to_string(slot.quantity));
@@ -166,10 +166,10 @@ void InventoryManager::updateSlotTextures(float screenW, float screenH) {
         slot.emptySlot.setFillColor(sf::Color(100, 100, 100, 150));
         
         sf::Vector2f spriteSize = slot.sprite.getGlobalBounds().size;
-        slot.sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
         float scaleX = 60.f / spriteSize.x;
         float scaleY = 60.f / spriteSize.y;
-        slot.sprite.setScale({scaleX, scaleY});
+        slot.sprite.setScale({2.f, 2.f});
+        slot.sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
 
         float row = (float)(i/5 + 1);
         float column = (float)(i%5 + 1);

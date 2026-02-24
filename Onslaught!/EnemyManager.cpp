@@ -145,3 +145,15 @@ void EnemyManager::reset() {
 const std::vector<std::shared_ptr<Enemy>>& EnemyManager::getEnemyList() const {
     return enemies;
 }
+
+void EnemyManager::setSpawnMinMax(float min, float max) {
+	if(min < 0.05f) minSpawnInterval = 0.05f;
+	else minSpawnInterval = min;
+	if(max < 0.15f) maxSpawnInterval = 0.15f;
+	else maxSpawnInterval = max;
+}
+
+void EnemyManager::setMaxSpawn(float max) {
+	if(max > 100) maxEnemies = 100;
+	else maxEnemies = max;
+}

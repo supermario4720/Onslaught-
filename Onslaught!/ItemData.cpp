@@ -25,7 +25,6 @@ const std::unordered_map<ItemID, ItemData>& ItemDatabase::getMap() {
         { ItemID::None, {
             "None",
             "No Description",
-            "temp", //"items/~~~.png",
             false,
             1
         }},
@@ -33,7 +32,6 @@ const std::unordered_map<ItemID, ItemData>& ItemDatabase::getMap() {
         { ItemID::Wood, {
             "Wood",
             "Basic material for construction.",
-            "temp",
             true,
             99
         }},
@@ -41,14 +39,6 @@ const std::unordered_map<ItemID, ItemData>& ItemDatabase::getMap() {
         { ItemID::Stone, {
             "Stone",
             "Basic material for construction.",
-            "temp",
-            true,
-            99
-        }},
-        { ItemID::Bone, {
-            "Bone",
-            "Basic item drop from skeletons.",
-            "temp",
             true,
             99
         }},

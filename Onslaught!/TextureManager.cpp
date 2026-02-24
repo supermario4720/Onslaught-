@@ -56,19 +56,13 @@ const sf::Texture& TextureManager::getTexture(const BuildingID id) const {
     return buildingTextures[index];
 }
 const sf::Texture& TextureManager::getTexture(const ObjectID id) const {
-    //auto index = static_cast<std::size_t>(id);
-    
-    // temporarily only return the 0th array value for textures
-    auto index = static_cast<std::size_t>(ObjectID::None);
-
+    auto index = static_cast<std::size_t>(id);
     return objectTextures[index];
 }
 const sf::Texture& TextureManager::getTexture(const ItemID id) const {
     auto index = static_cast<std::size_t>(id);
     return itemTextures[index];
 }
-// const sf::Texture& TextureManager::getTexture(const EnemyID id) const {
-// }
 
 const sf::Font& TextureManager::getFont() const {
     return font;
@@ -103,16 +97,19 @@ void TextureManager::loadAllTextures() {
 
     // Loading in building textures
     loadTexture(BuildingID::None, "resources/buttonTextures/Button_Blue.png");
+    loadTexture(BuildingID::ArcherTower, "resources/Tower.png");
+    loadTexture(BuildingID::Wall, "resources/WallSegment.png");
 
     // Loading in object textures
     loadTexture(ObjectID::None, "resources/buttonTextures/Button_Blue.png");
+    loadTexture(ObjectID::Tree, "resources/Tree.png");
+    loadTexture(ObjectID::Stone, "resources/Rock_Field.png");
+
 
     // Loading in item textures
     loadTexture(ItemID::None, "resources/buttonTextures/Button_Blue.png");
-
-
-    // Loading in enemy textures
-    // loadTexture(ObjectID::None, "resources/buttonTextures/Button_Blue.png");
+    loadTexture(ItemID::Wood, "resources/Wood_Item.png");
+    loadTexture(ItemID::Stone, "resources/Rock_Item.png");
 }
 
 void TextureManager::clearManager() {

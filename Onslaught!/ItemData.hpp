@@ -21,8 +21,6 @@
 struct ItemData {
     std::string name;
     std::string description;
-    // used for item texture manager
-    std::string itemTextureName;
     bool stackable;
     int maxStack;
 };

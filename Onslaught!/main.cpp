@@ -12,8 +12,6 @@
 #include "VictoryUI.hpp"
 #include "InventoryUI.hpp"
 
-#include "UI.hpp"
-
 #include "Camera.hpp"
 
 

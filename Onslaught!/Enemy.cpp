@@ -248,7 +248,6 @@ void Enemy::onAttack() {
 
 void Enemy::onDeath() {
     // call EntityManager instance to get item manager, and spawn item
-    entityManager.spawnItems(drop, getPosition(), qty);
     entityManager.spawnExp(getPosition(), droppedExp);
     isAlive = false;
 }

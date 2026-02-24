@@ -51,9 +51,9 @@ void EntityManager::reset() {
 	playerAlive = false;
 	townAlive = false;
 
-	// start with items in inventory for testing/debugging
-	playerInventory.addItem(ItemID::Wood, 200);
-	playerInventory.addItem(ItemID::Stone, 200);
+	// start with items in inventory
+	playerInventory.addItem(ItemID::Wood, 10);
+	playerInventory.addItem(ItemID::Stone, 10);
 	playerInventory.printItems();
 }
 
@@ -104,6 +104,10 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	itemManager.update(dt, playerPositionHolder, playerInventory, player->getStatusManager());
 	buildManager.update(dt, playerPositionHolder, playerInventory, enemyManager, _window);
 	enemyManager.update(dt, buildManager);
+	if(gameTime > 120.f) {
+		enemyManager.setSpawnMinMax(0.3f, 1.f);
+		enemyManager.setMaxSpawn(100.f);
+	}
 	objectManager.update(dt);
 
 	// update all entites

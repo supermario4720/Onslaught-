@@ -35,9 +35,7 @@ private:
 	float attackDamage;
 
 	// Item drops
-	ItemID drop = ItemID::Bone; //bone
-	int qty = 1;
-	int droppedExp = 50;
+	int droppedExp = 5;
 
 public:
 	Enemy(sf::Vector2f initPos, float enemySize=30.f, float speed = 75.f );

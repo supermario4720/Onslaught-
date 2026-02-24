@@ -11,7 +11,6 @@ const std::unordered_map<BuildingID, BuildingData>& BuildingDatabase::getMap() {
         { BuildingID::None, {
             "None",
             "No Description",
-            "tempBuilding", // "building/textureName",
             {},
             {1.f, 1.f},
             1.f
@@ -20,7 +19,6 @@ const std::unordered_map<BuildingID, BuildingData>& BuildingDatabase::getMap() {
         { BuildingID::ArcherTower, {
             "Archer Tower",
             "Basic defensive tower.",
-            "tempBuilding",
             {
                 {ItemID::Wood, 5},
                 {ItemID::Stone, 5}
@@ -32,7 +30,6 @@ const std::unordered_map<BuildingID, BuildingData>& BuildingDatabase::getMap() {
         { BuildingID::Wall, {
             "Wall",
             "Basic defensive wall",
-            "tempBuilding",
             {
                 {ItemID::Wood, 5}
             },

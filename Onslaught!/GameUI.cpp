@@ -79,7 +79,12 @@ void GameUI::update(float dt, sf::RenderWindow& window, InventoryUI& inventory) 
     EntityManager& entMan = EntityManager::getInstance();
 
     std::stringstream timeStream;
-    timeStream << std::fixed << std::setprecision(2) << entMan.getTime();
+    float time = entMan.getTime();
+    // change timer to red when past 2 minutes (wave start)
+    if(time > 20.f) timeText.setFillColor(sf::Color(255, 155, 155, 235));
+    else timeText.setFillColor(sf::Color(255, 255, 255, 235));
+    
+    timeStream << std::fixed << std::setprecision(2) << time;
     std::string timeStr = timeStream.str();
     std::string scoreStr = std::to_string(entMan.getScore());
     scoreText.setString(scoreStr);
@@ -100,7 +105,7 @@ void GameUI::update(float dt, sf::RenderWindow& window, InventoryUI& inventory) 
     if (state.getState() == GameStateManager::State::GameOver) {
         return;
     }
-    if (entMan.getTime() >= 60.f) {
+    if (entMan.getTime() >= 180.f) {
         state.setState(GameStateManager::State::Victory);
         return;
     }

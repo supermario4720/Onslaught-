@@ -6,7 +6,7 @@
 #include <iostream>
 
 ObjectManager::ObjectManager()
-: objectCount(0), maxObjects(20)
+: objectCount(0), maxObjects(30)
 {}
 
 void ObjectManager::setCamera(Camera* ptr) {
@@ -20,8 +20,8 @@ sf::Vector2f ObjectManager::randomSpawnPosition(ObjectID id) {
     sf::Vector2f viewSize = view.getSize();
     sf::Vector2f spawnPos;
     // setting corners for spawn positions
-    float margin = 50.f;
-    float farthestSpawnRange = 1000.f;
+    float margin = 20.f;
+    float farthestSpawnRange = 500.f;
     float left = viewPos.x - viewSize.x * 0.5f - margin;
     float right = viewPos.x + viewSize.x * 0.5f + margin;
     float top = viewPos.y - viewSize.y * 0.5f - margin;

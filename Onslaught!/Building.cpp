@@ -5,7 +5,7 @@
 
 
 Building::Building(BuildingID id, sf::Vector2f pos, int _faction)
-: Entity( TextureManager::getInstance().getTexture( BuildingDatabase::get(id).texture ), BuildingDatabase::get(id).health ),
+: Entity( TextureManager::getInstance().getTexture( id ), BuildingDatabase::get(id).health ),
 buildingID(id), expired(false)
 {
 	position = pos;

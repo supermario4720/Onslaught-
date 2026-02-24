@@ -14,7 +14,6 @@ struct BuildingCost {
 struct BuildingData {
     std::string name;
     std::string description;
-    std::string texture;
     std::vector<BuildingCost> buildCost;
     sf::Vector2f size;
 

@@ -26,6 +26,9 @@ public:
 
     const std::vector<std::shared_ptr<Enemy>>& getEnemyList() const;
 
+    void setSpawnMinMax(float min, float max);
+    void setMaxSpawn(float max);
+
 private:
     std::vector<std::shared_ptr<Enemy>> enemies;
 
