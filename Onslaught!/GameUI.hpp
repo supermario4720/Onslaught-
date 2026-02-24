@@ -10,12 +10,13 @@
 class Camera;
 class Town;
 struct KeyIcon;
+class InventoryUI;
 
 class GameUI {
 public:
     GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr);
 
-    void update(float dt, sf::RenderWindow& window);
+    void update(float dt, sf::RenderWindow& window, InventoryUI& inventory);
 
     void render(sf::RenderWindow& window);
 
@@ -54,6 +55,7 @@ private:
 
     // Pause button (uses your Button class)
     Button pauseButton;
+    Button inventoryButton;
     //maybe make get function for player health values instead for text
     sf::Text scoreText;
     sf::Text timeText;

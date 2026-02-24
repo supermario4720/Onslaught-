@@ -1,6 +1,10 @@
 #include "TextureManager.hpp"
 #include "ObjectData.hpp"
 
+TextureManager::TextureManager() {
+    if (!font.openFromFile("resources/arial.ttf")) {}
+}
+
 TextureManager::~TextureManager() {
     clearManager();
 }
@@ -65,6 +69,10 @@ const sf::Texture& TextureManager::getTexture(const ItemID id) const {
 }
 // const sf::Texture& TextureManager::getTexture(const EnemyID id) const {
 // }
+
+const sf::Font& TextureManager::getFont() const {
+    return font;
+}
 
 
 

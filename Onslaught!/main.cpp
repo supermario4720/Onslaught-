@@ -10,8 +10,7 @@
 #include "HowToPlayUI.hpp"
 #include "GameOverUI.hpp"
 #include "VictoryUI.hpp"
-//#include "ExpandedInventory.hpp"
-//#include "CompactInventory.hpp"
+#include "InventoryUI.hpp"
 
 #include "UI.hpp"
 
@@ -36,11 +35,11 @@ int main() {
     // play noise at start so SFML loads sound properly
     AudioManager::getInstance().play("ButtonClick", 0.f);
 
-    sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "Game", sf::Style::Titlebar | sf::Style::Close);
+    float screenWidth = 800.f;
+    float screenHeight = 600.f;
+    sf::RenderWindow window(sf::VideoMode({ static_cast<unsigned int>(screenWidth), static_cast<unsigned int>(screenHeight)}), "Game", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
-    Camera camera(window, 800.f, 600.f);
-    //window.setMinimumSize(sf::Vector2u{ 400, 300 });
-    //window.
+    Camera camera(window, screenWidth, screenHeight );
 
     sf::Clock clock;
 
@@ -56,9 +55,8 @@ int main() {
     PauseUI pauseScreen(font, window);
     GameOverUI gameOverScreen(font, window);
     VictoryUI winScreen(font, window);
+    InventoryUI inventory(font, window);
 
-    //InventoryUIExpanded expandedInv;
-    //InventoryUICompact compactInv;
     // used to display manual on first play
     int firstPlay = 0;
 
@@ -135,11 +133,19 @@ int main() {
                     break;
                 }
 
-                // update game state
-                entityManager.update(dt, window);
-                collisionManager.update(dt);
-                gameScreen.update(dt, window);
-                camera.follow(entityManager.getPlayerPos());
+                // update game state if inventory is closed
+                if(!inventory.isInventoryOpen()) {
+                    entityManager.update(dt, window);
+                    entityManager.setInvUpdate(false);
+                    collisionManager.update(dt);
+                    gameScreen.update(dt, window, inventory);
+                    camera.follow(entityManager.getPlayerPos());
+
+                }
+                else {
+                    entityManager.updateInventoryTextures(screenWidth, screenHeight);
+                    inventory.update(dt, window);
+                }
 
                 window.clear(sf::Color(10,10,10,255));
                 window.draw(background);
@@ -157,12 +163,12 @@ int main() {
                 // render player and surroundings
                 window.setView(camera.getView());
                 entityManager.renderAlive(window);
-                ////window.draw(center);
 
                 // render game UI
                 window.setView(window.getDefaultView());
                 gameScreen.render(window);
-                //compactInv.Draw(window);
+                if(inventory.isInventoryOpen()) inventory.render(window, entityManager.getPlayerInventory());
+
 
                 // check for game over
                 if (!entityManager.isPlayerAlive() || !entityManager.isTownAlive()) gameState = GameStateManager::State::GameOver;

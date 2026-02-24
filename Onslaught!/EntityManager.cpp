@@ -17,7 +17,7 @@ EntityManager::EntityManager()
 {
 	itemManager = ItemManager();
 	buildManager = BuildingManager();
-	playerInventory = InventoryManager(7);
+	playerInventory = InventoryManager(15);
 	enemyManager = EnemyManager();
 	objectManager = ObjectManager();
 }
@@ -224,4 +224,17 @@ int EntityManager::getNextEntityID() {
 	int id = nextEntityID;
 	nextEntityID++;
 	return id;
+}
+
+const InventoryManager& EntityManager::getPlayerInventory() const {
+	return playerInventory;
+}
+
+void EntityManager::updateInventoryTextures(float screenW, float screenH) {
+	if(!inventoryUpdated) playerInventory.updateSlotTextures(screenW, screenH);
+	inventoryUpdated = true;
+}
+
+void EntityManager::setInvUpdate(bool updated) {
+	inventoryUpdated = updated;
 }

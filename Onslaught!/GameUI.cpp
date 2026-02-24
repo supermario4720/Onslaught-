@@ -5,6 +5,7 @@
 #include "GameStateManager.hpp"
 #include "EntityManager.hpp"
 #include "Town.hpp"
+#include "InventoryUI.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -12,7 +13,8 @@
 
 GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     : scoreText(font), timeText(font), currentHP(0.f), maxHP(0.f), currentStamina(0.f), maxStamina(0.f),
-    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font), cameraPtr(camPtr), townArrow(TextureManager::getInstance().getTexture("Pointer"))
+    pauseButton({ 40.f, 40.f }, { 0.f, 0.f }, "||", font), inventoryButton({ 150.f, 40.f }, { 0.f, 0.f }, "Open Inventory", font),
+    cameraPtr(camPtr), townArrow(TextureManager::getInstance().getTexture("Pointer"))
 {
     townBounds = sf::FloatRect({0.f, 0.f}, {0.f, 0.f});
     screenWidth = (float)window.getSize().x;
@@ -22,7 +24,6 @@ GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     hpBackground.setSize({ screenWidth/3.f, screenHeight/20.f });
     hpBackground.setFillColor(sf::Color(80, 0, 0));
     hpBackground.setPosition({ 20.f, 20.f });
-
     hpBar.setSize({ screenWidth / 3.f, screenHeight / 20.f });
     hpBar.setFillColor(sf::Color(255, 0, 0));
     hpBar.setPosition({20.f, 20.f});
@@ -31,7 +32,6 @@ GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     staminaBackground.setSize({ screenWidth / 3.f, screenHeight / 20.f });
     staminaBackground.setFillColor(sf::Color(30, 30, 30));
     staminaBackground.setPosition({ 20.f, 30.f + screenHeight/20.f });
-
     staminaBar.setSize({ screenWidth / 3.f, screenHeight / 20.f });
     staminaBar.setFillColor(sf::Color(0, 200, 0));
     staminaBar.setPosition({ 20.f, 30.f + screenHeight / 20.f });
@@ -39,6 +39,11 @@ GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     // ----- Pause Button -----
     pauseButton.setPosition({screenWidth - 40.f, 40.f});  // Top-right
     pauseButton.setCharSize(20);
+
+    // ----- Pause Button -----
+    inventoryButton.setPosition({100, screenHeight/5.f});  // Top-right
+    inventoryButton.setCharSize(18);
+    inventoryButton.setTextOffset(5);
 
     // ----- Text -----
     scoreText.setCharacterSize(32);
@@ -67,7 +72,7 @@ GameUI::GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr)
     setKeyboardTexture();
 }
 
-void GameUI::update(float dt, sf::RenderWindow& window) {
+void GameUI::update(float dt, sf::RenderWindow& window, InventoryUI& inventory) {
     //sf::Vector2f screenSize = sf::Vector2f(window.getSize());
     auto& input = InputManager::getInstance();
     auto& state = GameStateManager::getInstance();
@@ -89,6 +94,8 @@ void GameUI::update(float dt, sf::RenderWindow& window) {
  
     bool hover = pauseButton.isMouseOver(window);
     pauseButton.setHover(hover);
+    hover = inventoryButton.isMouseOver(window);
+    inventoryButton.setHover(hover);
 
     if (state.getState() == GameStateManager::State::GameOver) {
         return;
@@ -102,6 +109,10 @@ void GameUI::update(float dt, sf::RenderWindow& window) {
         state.setState(GameStateManager::State::Pause);
         return;
     }
+    if (inventoryButton.isClicked(window)) {
+        inventory.setVisibility(true);
+    }
+
 
     state.setState(GameStateManager::State::Playing);
     return;
@@ -123,6 +134,7 @@ void GameUI::render(sf::RenderWindow& window) {
     window.draw(timeText);
 
     pauseButton.render(window);
+    inventoryButton.render(window);
 }
 
 void GameUI::setHP(sf::Vector2f health) {

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include "BuildingID.hpp"
 #include "ObjectID.hpp"
 #include "ItemID.hpp"
@@ -30,6 +31,8 @@ public:
     const sf::Texture& getTexture(const ItemID id) const;
     // const sf::Texture& getTexture(const EnemyID id) const;
 
+    const sf::Font& getFont() const;
+
     void loadAllTextures();
 
     void clearManager();
@@ -47,8 +50,10 @@ private:
     // EnemyID::COUNT
     // std::array<sf::Texture, static_cast<std::size_t>(EnemyID::COUNT)> enemyTextures;
 
-    TextureManager() = default;
+    TextureManager();
     ~TextureManager();
     TextureManager(const TextureManager&) = delete;
     TextureManager& operator=(const TextureManager&) = delete;
+
+    sf::Font font;
 };

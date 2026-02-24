@@ -1,4 +1,3 @@
-// Animation.hpp
 #pragma once
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -12,19 +11,10 @@ public:
     Animation() = default;
 
     // imageCount = {columns, rows}, rowIndex = which row this animation uses
-    Animation(const sf::Texture& texture,
-        sf::Vector2u imageCount,
-        unsigned int rowIndex,
-        unsigned int frameStart,
-        unsigned int frameEnd,
-        float switchTime)
-        : texture(&texture),
-        imageCount(imageCount),
-        row(rowIndex),
-        frameStart(frameStart),
-        frameEnd(frameEnd),
-        switchTime(switchTime),
-        totalTime(0.f)
+    Animation(const sf::Texture& texture, sf::Vector2u imageCount, unsigned int rowIndex,
+        unsigned int frameStart, unsigned int frameEnd, float switchTime)
+        : texture(&texture), imageCount(imageCount), row(rowIndex), frameStart(frameStart), frameEnd(frameEnd),
+        switchTime(switchTime), totalTime(0.f)
     {
         currentFrame.x = frameStart;
         currentFrame.y = row;

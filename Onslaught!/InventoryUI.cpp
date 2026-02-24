@@ -1,37 +1,41 @@
 #include <SFML/Graphics.hpp>
 #include "InventoryUI.hpp"
+#include "InventoryManager.hpp"
 #include "InputManager.hpp"
 #include "GameStateManager.hpp"
 #include <iostream>
 
 InventoryUI::InventoryUI(sf::Font& font, const sf::RenderWindow& window)
-    : pauseText(font), 
-    resumeButton({ 200.f, 80.f }, { 0.f, 0.f }, "Resume", font),
-    homeButton({ 200.f, 80.f }, { 0.f, 0.f }, "Return Home", font),
-    exitButton({ 200.f, 80.f }, { 0.f, 0.f }, "Close Game", font)
+    : inventoryText(font), resumeButton({ 50.f, 50.f }, { 0.f, 0.f }, " X ", font)
 {
     screenWidth = (float)window.getSize().x;
     screenHeight = (float)window.getSize().y;
 
-    
+    // the background dimmed out
+    background.setSize({ screenWidth, screenHeight });
+    background.setFillColor(sf::Color(0, 0, 0, 50));
+    background.setPosition( {0, 0} );
 
+    // Inventory UI background / base
+    inventoryBase.setSize({ screenWidth*3.f/4.f, screenHeight*3.f/4.f });
+    inventoryBase.setFillColor(sf::Color(30, 30, 30, 220));
+    inventoryBase.setOrigin({ screenWidth*3.f/8.f, screenHeight*3.f/8.f });
+    inventoryBase.setPosition( { screenWidth/2.f, screenHeight/2.f } );
 
+    inventoryText = sf::Text(font);
+    inventoryText.setCharacterSize(24);
+    inventoryText.setString("Inventory");
+    inventoryText.setFillColor(sf::Color(255, 255, 255, 200));
+    auto bounds = inventoryText.getLocalBounds();
+    inventoryText.setOrigin({ bounds.size.x / 2, bounds.size.y / 2 });
+    inventoryText.setPosition( { screenWidth/5.f, screenHeight/7.f } );
 
-    pauseText = sf::Text(font);   // SFML 3 requires constructing with font
-    pauseText.setCharacterSize(48);
-    pauseText.setString("Paused");
-    pauseText.setFillColor(sf::Color(255, 255, 255, 200));
-
-    auto bounds = pauseText.getLocalBounds();
-    pauseText.setOrigin({ bounds.size.x / 2, bounds.size.y / 2 });
-    pauseText.setPosition( { screenWidth / 2.f, screenHeight / 4.f } );
-
-    resumeButton.setPosition( { (screenWidth / 2.f) , screenHeight * 2.2f / 5.f } );  // Top-right
+    resumeButton.setPosition({ screenWidth*7.f/8.f - 20.f, screenHeight/8.f + 20.f });  // Top-right
     resumeButton.setCharSize(32);
-    homeButton.setPosition( { (screenWidth / 2.f) , screenHeight * 3.f / 5.f } );  // Top-right
-    homeButton.setCharSize(30);
-    exitButton.setPosition( { (screenWidth / 2.f) , screenHeight * 3.8f / 5.f } );  // Top-right
-    exitButton.setCharSize(32);
+
+}
+
+InventoryUI::~InventoryUI() {
 }
 
 void InventoryUI::update(float dt, sf::RenderWindow& window) {
@@ -40,33 +44,36 @@ void InventoryUI::update(float dt, sf::RenderWindow& window) {
     auto& state = GameStateManager::getInstance();
     
     bool resumeHover = resumeButton.isMouseOver(window);
-    bool homeHover = homeButton.isMouseOver(window);
-    bool exitHover = exitButton.isMouseOver(window);
     resumeButton.setHover(resumeHover);
-    homeButton.setHover(homeHover);
-    exitButton.setHover(exitHover);
 
     if (resumeButton.isClicked(window)) {
-        state.setState(GameStateManager::State::Playing);
-        return;
+        inventoryOpen = false;
     }
-    if (homeButton.isClicked(window)) {
-        state.setState(GameStateManager::State::Title);
-        return;
-    }
-    if (exitButton.isClicked(window)) {
-        state.setState(GameStateManager::State::Exit);
-        return;
-    }
-    state.setState(GameStateManager::State::Pause);
-    return;
 }
 
-void InventoryUI::render(sf::RenderWindow& window) {
-    window.draw(pauseText);
+void InventoryUI::render(sf::RenderWindow& window, const InventoryManager& inventoryManager) {
+    window.draw(background);
+    window.draw(inventoryBase);
+    window.draw(inventoryText);
     resumeButton.render(window);
-    homeButton.render(window);
-    exitButton.render(window);
+    
+    const std::vector<InventorySlot>& inventory = inventoryManager.getInventory();
+    for(auto slot : inventory) {
+        if(slot.id == ItemID::None) window.draw(slot.emptySlot);
+        else {
+            window.draw(slot.sprite);
+            window.draw(slot.qtyText);
+        }
+        
+    }
+}
+
+void InventoryUI::setVisibility(bool open) {
+    inventoryOpen = open;
+}
+
+bool InventoryUI::isInventoryOpen() const {
+    return inventoryOpen;
 }
 
 

@@ -4,7 +4,8 @@
 
 
 InventoryManager::InventoryManager(int maxSlots)
-: maxInventorySlots(maxSlots), inventory(maxSlots), isInventoryFull(false) {}
+: maxInventorySlots(maxSlots), inventory(maxSlots), isInventoryFull(false) {
+}
 
 // adds item to inventory if space remains. Returns the remaining item amount
 int InventoryManager::addItem(ItemID id, int amount) {
@@ -22,6 +23,7 @@ int InventoryManager::addItem(ItemID id, int amount) {
             if(slot.id == id && !slot.isFull) {
                 const int canAdd = std::min(remaining, (maxStack - slot.quantity) );
                 slot.quantity += canAdd;
+                slot.qtyText.setString(std::to_string(slot.quantity));
                 remaining -= canAdd;
                 // if all the items are added, return
                 if (slot.quantity == maxStack) slot.isFull = true;
@@ -36,8 +38,10 @@ int InventoryManager::addItem(ItemID id, int amount) {
             // First, check slots with the same item and not full
             if(slot.id == ItemID::None) {
                 slot.id = id;
+                slot.sprite.setTexture( TextureManager::getInstance().getTexture("temp") );
                 const int canAdd = std::min(remaining, (maxStack - slot.quantity) );
                 slot.quantity += canAdd;
+                slot.qtyText.setString(std::to_string(slot.quantity));
                 remaining -= canAdd;
                 // if all the items are added, return
                 if (slot.quantity == maxStack) slot.isFull = true;
@@ -55,6 +59,7 @@ int InventoryManager::addItem(ItemID id, int amount) {
             if (slot.id == ItemID::None) {
                 slot.id = id;
                 slot.quantity = 1;
+                slot.qtyText.setString('1');
                 remaining -= 1;
                 slot.isFull = true;
             }
@@ -65,10 +70,15 @@ int InventoryManager::addItem(ItemID id, int amount) {
 }
 
 void InventoryManager::reset() {
+    const sf::Texture& tempTex = TextureManager::getInstance().getTexture("temp");
+
     for (auto& slot : inventory) {
         slot.id = ItemID::None;
         slot.quantity = 0;
         slot.isFull = false;
+        slot.sprite.setTexture(tempTex);
+        slot.qtyText.setString('0');
+
     }
     isInventoryFull = false;
 }
@@ -138,6 +148,39 @@ void InventoryManager::removeItems(ItemID id, int amount) {
             if( slot.quantity < amount ) slot.quantity = 0;
             else slot.quantity -= amount;
         }
+        slot.qtyText.setString(std::to_string(slot.quantity));
         slot.isFull = false;
+    }
+}
+
+const std::vector<InventorySlot>& InventoryManager::getInventory() const {
+    return inventory;
+}
+
+void InventoryManager::updateSlotTextures(float screenW, float screenH) {
+    int i = 0;
+    // initializing slot positions and sizes
+    for (auto& slot : inventory) {
+        slot.emptySlot.setSize({60.f, 60.f});
+        slot.emptySlot.setOrigin({30.f, 30.f});
+        slot.emptySlot.setFillColor(sf::Color(100, 100, 100, 150));
+        
+        sf::Vector2f spriteSize = slot.sprite.getGlobalBounds().size;
+        slot.sprite.setOrigin({spriteSize.x / 2.f, spriteSize.y/2.f});
+        float scaleX = 60.f / spriteSize.x;
+        float scaleY = 60.f / spriteSize.y;
+        slot.sprite.setScale({scaleX, scaleY});
+
+        float row = (float)(i/5 + 1);
+        float column = (float)(i%5 + 1);
+        slot.emptySlot.setPosition({ screenW*column/7.f + 50.f, screenH*row/5.f + 50.f });
+        slot.sprite.setPosition({ screenW*column/7.f + 50.f, screenH*row/5.f + 50.f });
+        i++;
+
+        slot.qtyText.setCharacterSize(12);
+        slot.qtyText.setFillColor(sf::Color(255, 255, 255, 255));
+        auto bounds = slot.qtyText.getLocalBounds();
+        slot.qtyText.setOrigin({ bounds.size.x / 2, bounds.size.y / 2 });
+        slot.qtyText.setPosition({ screenW*column/7.f + 50.f, screenH*row/5.f + 70.f } );
     }
 }

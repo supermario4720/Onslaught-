@@ -43,6 +43,8 @@ private:
 	bool playerAlive = false;
 	bool townAlive = false;
 
+	bool inventoryUpdated = false;
+
 public:
 	static EntityManager& getInstance();
 
@@ -80,6 +82,11 @@ public:
 	sf::Vector2f getPlayerStamina();
 
 	std::weak_ptr<Town> getTownPtr() const;
+
+	const InventoryManager& getPlayerInventory() const;
+
+	void updateInventoryTextures(float screenW, float screenH);
+	void setInvUpdate(bool updated);
 
 };
 
