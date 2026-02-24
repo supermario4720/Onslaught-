@@ -18,13 +18,7 @@ struct KeyIcon {
     int longWidth = 32;
     int height = 16;
 
-    KeyIcon(const sf::Texture& tex,
-            sf::Keyboard::Key k,
-            int column,
-            int row,
-            sf::Vector2f pos,
-            bool isLong = false
-            )
+    KeyIcon(const sf::Texture& tex, sf::Keyboard::Key k, int column, int row, sf::Vector2f pos, bool isLong = false )
     : sprite(tex), key(k)
     {  
         if(isLong) {

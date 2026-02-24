@@ -13,10 +13,11 @@ Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, sf::Vector2f 
 	rectHB.setSize(size);
 	rectHB.setOrigin( size/2.f );
 	rectHB.setPosition(position);
-	rectHB.setFillColor(sf::Color::Yellow);
+	rectHB.setFillColor(sf::Color(255, 255, 0, 150));
 
 	circleHB.setPosition({ 0.f ,0.f });
 	circleHB.setRadius(0.f);
+
 
 	hitboxOwner = owner;
 	faction = owner.lock()->getFaction();
@@ -32,7 +33,7 @@ Hitbox::Hitbox(std::weak_ptr<Entity> owner, sf::Vector2f position, float r, int 
 	circleHB.setRadius(r);
 	circleHB.setOrigin({ r, r });
 	circleHB.setPosition(position);
-	circleHB.setFillColor(sf::Color::Yellow);
+	circleHB.setFillColor(sf::Color(255, 255, 0, 150));
 
 	rectHB.setPosition({ 0.f, 0.f });
 	rectHB.setSize({ 0.f, 0.f });
