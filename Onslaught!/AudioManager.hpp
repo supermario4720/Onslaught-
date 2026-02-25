@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 
+//  ‰¹‚ğŠÇ—‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
 class AudioManager {
 public:
     static AudioManager& getInstance() {

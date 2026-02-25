@@ -6,10 +6,8 @@
 #include <SFML/System/Angle.hpp>
 #include <iostream>
 
-
-
 class Entity;
-
+//　当たり判定の基底クラス（普通の衝突に使用）
 class Hitbox {
 protected:
 	// 0 for rect, 1 for circle
@@ -73,6 +71,7 @@ public:
 
 
 // hitbox for attacks (trigger onCollision events)
+//　衝突しない当たり判定のクラス
 class TriggerHitbox : public Hitbox {
 protected:
 	float damage;
@@ -87,7 +86,7 @@ public:
 	virtual void updateTriggerHitbox(float deltaTime, sf::Vector2f currentPlayerPos, sf::Angle currentPlayerDirection);	
 };
 
-
+//　プレイヤーの攻撃の当たり判定クラス
 class SwingHitbox : public TriggerHitbox {
 private:
 	// distance from player origin to hitbox origin

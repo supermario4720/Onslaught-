@@ -7,7 +7,7 @@
 class InventoryManager;
 class EnemyManager;
 class Building;
-
+//　建築機能を管理するためのクラス
 class BuildingManager {
 public:
     BuildingManager();

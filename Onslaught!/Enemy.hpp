@@ -7,12 +7,11 @@
 
 class EntityManager;
 class BuildingManager;
-
+//　敵のクラス
 class Enemy : public Entity {
 private:
 	std::weak_ptr<Enemy> selfPtr;
 	EntityManager& entityManager;
-	// sf::Vector2f homePos;
 
 	sf::CircleShape enemy;
 
@@ -40,12 +39,11 @@ private:
 public:
 	Enemy(sf::Vector2f initPos, float enemySize=30.f, float speed = 75.f );
 	~Enemy();
+	//　クラスのインスタンスを作り、ポインターを返す関数
 	static std::shared_ptr<Enemy> create(sf::Vector2f initPos, float enemySize = 23.f, float speed = 60.f);
 	void initializeHitbox() override;
 	void initializePtr(std::shared_ptr<Enemy> ptr);
 
-	//void update(float dt, sf::Vector2f playerPos);
-	// instead of passing playerPos, read it from inside update -> make player be publically known
 	void onCollision(float damage, sf::Vector2f damageOrigin) override;
 
 	void onAttack() override;

@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Rect.hpp>
 
 // Instance of Item (on map, inventory, etc)
+//　アイテムクラス（フィールド、インベントリーなど）
 class Item {
 private:
     ItemID id;

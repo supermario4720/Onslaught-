@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
 
-
+//　ゲームオーバー時に出るUIのクラス
 class GameOverUI {
 public:
     GameOverUI(sf::Font& font, const sf::RenderWindow& window);

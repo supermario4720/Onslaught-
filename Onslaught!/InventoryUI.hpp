@@ -4,7 +4,7 @@
 #include "Button.hpp"
 
 class InventoryManager;
-
+//プレイヤーのインベントリーを書くためのクラス
 class InventoryUI {
 public:
     InventoryUI(sf::Font& font, const sf::RenderWindow& window);

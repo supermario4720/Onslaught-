@@ -5,7 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include <iostream>
-
+//　スプライトのアニメーションを管理するためのクラス
 class Animation {
 public:
     Animation() = default;

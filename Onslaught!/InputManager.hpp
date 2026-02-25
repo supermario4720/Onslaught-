@@ -7,7 +7,7 @@
 #include <cassert>
 
 class Camera;
-
+//　プレイヤーの入力を管理するためのクラス
 class InputManager {
 public:
     static InputManager& getInstance();

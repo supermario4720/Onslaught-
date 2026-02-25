@@ -8,6 +8,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <iostream>
 
+//　ゲーム画面上に描かれるキーボードのアイコン
 struct KeyIcon {
     sf::Sprite sprite;
     sf::Keyboard::Key key;

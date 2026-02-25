@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
 
-
+//　ポーズ画面のUI
 class PauseUI {
 public:
     PauseUI(sf::Font& font, const sf::RenderWindow& window);

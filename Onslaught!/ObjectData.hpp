@@ -5,6 +5,7 @@
 #include <array>
 #include <SFML/System/Vector2.hpp>
 
+//　障害物・オブジェクトのデータ設計
 struct ObjectData {
     ObjectID id;
     std::string description;
@@ -17,8 +18,7 @@ struct ObjectData {
     int maxDropQty;
     float maxHealth;
 };
-
-
+//　障害物・オブジェクトのデータベース（どこからでも呼べる）
 class ObjectDatabase {
 public: 
 	static const ObjectData& get(ObjectID id);

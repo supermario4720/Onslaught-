@@ -9,6 +9,7 @@
 class Hitbox;
 
 // base class for all entities
+//　全てのEntityの基底クラス
 class Entity : public std::enable_shared_from_this<Entity> {
 protected:
 	sf::Vector2f position;
@@ -18,7 +19,6 @@ protected:
 	sf::Sprite sprite;
 	AnimationController animations;
 	AnimationController::State targetState = AnimationController::State::IdleRight;
-
 
 	float maxHealth;
 	float health;
@@ -33,6 +33,8 @@ protected:
 	float movementSpeed = 80.f;
 	float invincibility;
 
+	// EntityのインスタンスごとにID,タイプ（種類）、派閥（味方、敵、中立（オブジェクト））が割り振られる
+
 	// Each instance of entity should be assigned a unique identifier
 	int entityID;
 	// Each type of entity (e.g. player, enemy) should have type identifier
@@ -45,8 +47,10 @@ protected:
 
 public:
 	// Entity constructer without specifying current health
+	// 現在の体力を指定せずにインスタンスを作る関数（最大体力のみを指定）
 	Entity(const sf::Texture& tex, float _maxHealth, bool destructable = true, bool alive = true);
 	// constructer with health specification
+	// 現在の体力を指定し、にインスタンスを作る関数
 	Entity(const sf::Texture& tex, float _maxHealth, float _health, bool destructable = true, bool alive = true);
 
 	virtual void initializeHitbox();

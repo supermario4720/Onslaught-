@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
 
-
+//ƒQ[ƒ€Ÿ—˜‚ÌUI
 class VictoryUI {
 public:
     VictoryUI(sf::Font& font, const sf::RenderWindow& window);

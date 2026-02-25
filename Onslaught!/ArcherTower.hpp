@@ -3,7 +3,7 @@
 
 class EnemyManager;
 class Enemy;
-
+// 防衛タワー（やぐら）
 class ArcherTower : public Building {
 public:
     ArcherTower(BuildingID id, sf::Vector2f pos, int faction = 0);
@@ -17,12 +17,14 @@ public:
     void render(sf::RenderWindow& window) override;
 
 private:
+    //　パラメータの設定
     float attackRange      = 250.f;
     float attackCooldown   = 0.8f;
     float timeSinceLastShot = 0.f;
     float arrowSpeed       = 500.f;
     float arrowDamage      = 10.f;
 
+    // 矢の設計
     struct Arrow {
         sf::RectangleShape shape;
         sf::Vector2f velocity;

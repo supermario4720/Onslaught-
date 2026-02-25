@@ -95,7 +95,6 @@
     <ClInclude Include="TextureManager.hpp" />
     <ClInclude Include="TitleScreen.hpp" />
     <ClInclude Include="Town.hpp" />
-    <ClInclude Include="UI.hpp" />
     <ClInclude Include="VictoryUI.hpp" />
   </ItemGroup>
   <ItemGroup>

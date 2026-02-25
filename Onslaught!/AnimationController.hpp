@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "Animation.hpp"
 
+//　スプライトのアニメーションを操作するためのクラス
 class AnimationController {
 public:
     enum class State {

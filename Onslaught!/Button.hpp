@@ -6,8 +6,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <string>
 
-
-
+//全てのUIに使われるボタンのクラス
 class Button {
 private:
     sf::RectangleShape box;

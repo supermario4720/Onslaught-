@@ -4,7 +4,7 @@
 #include <vector>
 #include "Hitbox.hpp"
 
-
+//@Õ“Ë‚ğŠÇ—‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
 class CollisionManager {
 private:
 	// contains hitboxes that can't overlap (blocking hitboxes)

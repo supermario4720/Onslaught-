@@ -12,6 +12,7 @@ class Town;
 struct KeyIcon;
 class InventoryUI;
 
+//　ゲームのUIを書くためのクラス
 class GameUI {
 public:
     GameUI(sf::Font& font, sf::RenderWindow& window, Camera* camPtr);

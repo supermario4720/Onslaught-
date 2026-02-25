@@ -4,7 +4,7 @@
 #include <vector>
 
 class Camera;
-
+//　オブジェクトを管理するためのクラス
 class ObjectManager {
 public:
     ObjectManager();

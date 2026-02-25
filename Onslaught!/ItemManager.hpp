@@ -8,6 +8,7 @@ class InventoryManager;
 class Experience;
 class PlayerStatusManager;
 
+//　アイテムを管理するためのクラス
 class ItemManager {
 public:
     void spawnItem(ItemID id, const sf::Vector2f& pos, int qty);

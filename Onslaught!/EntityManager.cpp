@@ -106,7 +106,7 @@ void EntityManager::update(float dt, sf::RenderWindow& _window) {
 	enemyManager.update(dt, buildManager);
 	if(gameTime > 120.f) {
 		enemyManager.setSpawnMinMax(0.3f, 1.f);
-		enemyManager.setMaxSpawn(100.f);
+		enemyManager.setMaxSpawn(100);
 	}
 	objectManager.update(dt);
 

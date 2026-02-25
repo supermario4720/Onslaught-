@@ -5,6 +5,7 @@
 #include <SFML/Graphics/Rect.hpp>
 
 // Instance of exp on field
+//　フィールド上の経験値のクラス
 class Experience {
 private:
     int quantity;

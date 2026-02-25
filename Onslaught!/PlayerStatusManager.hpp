@@ -5,6 +5,8 @@
 class Player;
 
 // Player stats stored here
+//　プレイたーのパラメータをここで保管
+    //後で確認・変更しやすい
 struct PlayerStatus {
     float maxHealth = 100.f;
     float healthRecoverySpeed = 5.f;
@@ -13,7 +15,7 @@ struct PlayerStatus {
     float attackDamage = 20.f;
     float movementSpeed = 80.f;
 };
-
+//　プレイヤーのステータスを管理するためのクラス（ステータス、レベルアップなど）
 class PlayerStatusManager {
 public:
     PlayerStatusManager();

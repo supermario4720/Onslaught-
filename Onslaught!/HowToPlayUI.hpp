@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
 
-
+//　ゲーム起動した後に初めてプレイしたときに出る操作の説明
 class HowToPlayUI {
 public:
     HowToPlayUI(sf::Font& font, const sf::RenderWindow& window);

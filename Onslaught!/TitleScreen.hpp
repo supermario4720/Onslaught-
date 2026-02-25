@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "Button.hpp"
 
+//ƒz[ƒ€‰æ–Ê‚ÌUI
 class TitleScreen {
 public:
     TitleScreen(sf::Font& font, sf::RenderWindow& window);

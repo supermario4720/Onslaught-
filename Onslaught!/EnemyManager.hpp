@@ -5,7 +5,7 @@
 
 class Camera;
 class BuildManager;
-
+//　敵のみを管理するためのクラス
 class EnemyManager {
 public:
     EnemyManager();
@@ -14,6 +14,7 @@ public:
 
     // make it so that the function only needs to be called, and no params needed
         // building ID should be stored in the manager, with a select (update function updates the selected building on input)
+    //敵を呼び出すためのクラス
     void spawnEnemy(float dt);
 
 	sf::Vector2f randomSpawnPosition();
@@ -27,7 +28,7 @@ public:
     const std::vector<std::shared_ptr<Enemy>>& getEnemyList() const;
 
     void setSpawnMinMax(float min, float max);
-    void setMaxSpawn(float max);
+    void setMaxSpawn(int max);
 
 private:
     std::vector<std::shared_ptr<Enemy>> enemies;

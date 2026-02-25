@@ -4,7 +4,7 @@
 #include "Entity.hpp"
 #include "Hitbox.hpp"
 
-
+// 障害物、オブジェクトなどのクラス（木、石）
 class Object : public Entity {
 private:
     ObjectID objID;

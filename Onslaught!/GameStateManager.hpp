@@ -1,6 +1,6 @@
 #pragma once
 
-
+//　ゲームの状態を管理/変更するためのクラス
 class GameStateManager {
 public:
     enum State {

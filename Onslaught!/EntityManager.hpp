@@ -18,6 +18,7 @@ class Player;
 class Town;
 class Building;
 
+//　Entityを管理するためのクラス（Enemy,Player,Objectや、他の管理クラスをまとめる）
 class EntityManager {
 private:
 	EntityManager();

@@ -153,7 +153,7 @@ void EnemyManager::setSpawnMinMax(float min, float max) {
 	else maxSpawnInterval = max;
 }
 
-void EnemyManager::setMaxSpawn(float max) {
+void EnemyManager::setMaxSpawn(int max) {
 	if(max > 100) maxEnemies = 100;
 	else maxEnemies = max;
 }

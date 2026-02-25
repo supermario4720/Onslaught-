@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <vector>
 
+//　インベントリーのスロット・枠
 struct InventorySlot {
     ItemID id = ItemID::None;
     int quantity = 0;
@@ -20,6 +21,7 @@ struct InventorySlot {
     InventorySlot(): sprite(TextureManager::getInstance().getTexture("temp")), qtyText(TextureManager::getInstance().getFont()) {};
 };
 
+//インベントリーを管理するためのクラス
 class InventoryManager {
 public:
     InventoryManager(int maxSlots = 15);

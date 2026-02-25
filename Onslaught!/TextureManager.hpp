@@ -4,12 +4,13 @@
 #include "BuildingID.hpp"
 #include "ObjectID.hpp"
 #include "ItemID.hpp"
-// #include "EnemyID.hpp"
+// #include "EnemyID.hpp
 
 #include <string>
 #include <unordered_map>
 #include <array>
 
+//全てのテキスチャーをロードし、管理するためのクラス
 class TextureManager {
 public:
     static TextureManager& getInstance() {
@@ -18,6 +19,8 @@ public:
     }
 
     // Load textures into the manager
+    //テキスチャーをロードする関数
+        //各IDで登録できるように、ポリモーフィズムを使用
     void loadTexture(const std::string& name, const std::string& filepath);
     void loadTexture(const BuildingID id, const std::string& filepath);
     void loadTexture(const ObjectID id, const std::string& filepath);
@@ -25,6 +28,8 @@ public:
     // void loadTexture(const EnemyID id, const std::string& filepath);
 
     // Retrieve a texture
+    //テキスチャーを呼び出すための関数
+        //各IDで登録できるように、ポリモーフィズムを使用
     const sf::Texture& getTexture(const std::string& name) const;
     const sf::Texture& getTexture(const BuildingID id) const;
     const sf::Texture& getTexture(const ObjectID id) const;
@@ -38,7 +43,8 @@ public:
     void clearManager();
 
 private:
-    // includes UI, player, background, etc???
+    // includes UI, player, background, etc
+    //様々なテキスチャーを保存するためのMap
     std::unordered_map<std::string, sf::Texture> textures;
 
     std::array<sf::Texture, static_cast<std::size_t>(BuildingID::COUNT)> buildingTextures;

@@ -11,6 +11,7 @@
 
 class EnemyManager;
 
+//　建物の基底クラス
 class Building : public Entity {
 protected:
     std::weak_ptr<Building> selfPtr;
@@ -31,6 +32,7 @@ public:
 
     void update(float dt) override;
     // overload function for usage in subclasses
+    //子クラスように変更したUpdate（）
     virtual void update(float dt, EnemyManager& enemyManager);
 
     void render(sf::RenderWindow& window) override;
