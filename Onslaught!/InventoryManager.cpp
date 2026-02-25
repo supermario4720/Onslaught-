@@ -70,13 +70,11 @@ int InventoryManager::addItem(ItemID id, int amount) {
 }
 
 void InventoryManager::reset() {
-    const sf::Texture& tempTex = TextureManager::getInstance().getTexture("temp");
 
     for (auto& slot : inventory) {
         slot.id = ItemID::None;
         slot.quantity = 0;
         slot.isFull = false;
-        slot.sprite.setTexture(tempTex);
         slot.qtyText.setString('0');
 
     }

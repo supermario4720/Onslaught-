@@ -34,9 +34,6 @@
     <Filter Include="Source Files\Entities">
       <UniqueIdentifier>{351a2274-9ad2-4565-b7db-9685c1529f1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TextureManagers">
-      <UniqueIdentifier>{07dd5c12-92a2-41b3-af18-85e46339e636}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Entities\Buildings">
       <UniqueIdentifier>{0d78b3b5-68d6-4955-a66a-9be343d56d9c}</UniqueIdentifier>
     </Filter>
@@ -48,9 +45,6 @@
     </Filter>
     <Filter Include="Source Files\Entities\Items">
       <UniqueIdentifier>{018e3d6a-4a8c-44ba-959f-14b3039104c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\TextureManagers">
-      <UniqueIdentifier>{88bc4ec7-251f-48f1-9c4d-38ec5d99f31d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,17 +105,11 @@
     <ClCompile Include="Town.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AudioManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="HowToPlayUI.cpp">
       <Filter>Source Files\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemTextures.cpp">
-      <Filter>Source Files\Entities\Items</Filter>
     </ClCompile>
     <ClCompile Include="ItemData.cpp">
       <Filter>Source Files\Entities\Items</Filter>
@@ -153,15 +141,6 @@
     <ClCompile Include="EnemyManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="BuildingTextures.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="ButtonTextureLoader.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -172,6 +151,12 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -242,9 +227,6 @@
     <ClInclude Include="AnimationController.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SoundManager.hpp">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="AudioManager.hpp">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
@@ -284,19 +266,10 @@
     <ClInclude Include="ItemID.hpp">
       <Filter>Header Files\Entities\Items</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerStatusManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectID.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyIcon.hpp">
@@ -305,8 +278,23 @@
     <ClInclude Include="Experience.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InventoryUI.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.hpp">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStatusManager.hpp">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.hpp">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <CopyFileToFolders Include="resources\arial.ttf">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
     <CopyFileToFolders Include="resources\Castle_Blue.png">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
@@ -325,13 +313,19 @@
     <CopyFileToFolders Include="resources\Onslaught_Logo-BGremoved.png">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\pointer.png">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
     <CopyFileToFolders Include="resources\skeleton.png">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="resources\WASD_Manual_Japanese_BGremoved.png">
+    <CopyFileToFolders Include="resources\TownPointer.png">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="resources\*.*">
+    <CopyFileToFolders Include="resources\Up-Arrow.png">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resources\WASD_Manual_Japanese_BGremoved.png">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="resources\*.*">
@@ -409,6 +403,24 @@
     </Image>
     <Image Include="resources\skeleton.png">
       <Filter>Assets</Filter>
+    </Image>
+    <Image Include="resources\Rock_Field.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Rock_Item.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Tower.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Tree.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\WallSegment.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\Wood_Item.png">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -863,6 +875,97 @@
     <None Include="resources\**\*.*">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\**\*.*" />
     <None Include="resources\**\*.*">
       <Filter>Resource Files</Filter>
     </None>

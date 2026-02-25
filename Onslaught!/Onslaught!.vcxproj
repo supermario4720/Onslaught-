@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="ArcherTower.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Building.cpp" />
@@ -28,12 +27,10 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="CompactInventory.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
-    <ClCompile Include="ExpandedInventory.cpp" />
     <ClCompile Include="Experience.cpp" />
     <ClCompile Include="GameOverUI.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
@@ -42,6 +39,7 @@
     <ClCompile Include="HowToPlayUI.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="InventoryManager.cpp" />
+    <ClCompile Include="InventoryUI.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemData.cpp" />
     <ClCompile Include="ItemManager.cpp" />
@@ -69,12 +67,10 @@
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="CollisionManager.hpp" />
-    <ClInclude Include="CompactInventory.hpp" />
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="EnemyManager.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="EntityManager.hpp" />
-    <ClInclude Include="ExpandedInventory.hpp" />
     <ClInclude Include="Experience.hpp" />
     <ClInclude Include="GameOverUI.hpp" />
     <ClInclude Include="GameStateManager.hpp" />
@@ -83,6 +79,7 @@
     <ClInclude Include="HowToPlayUI.hpp" />
     <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="InventoryManager.hpp" />
+    <ClInclude Include="InventoryUI.hpp" />
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="ItemData.hpp" />
     <ClInclude Include="ItemID.hpp" />
@@ -95,7 +92,6 @@
     <ClInclude Include="PauseUI.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="PlayerStatusManager.hpp" />
-    <ClInclude Include="SoundManager.hpp" />
     <ClInclude Include="TextureManager.hpp" />
     <ClInclude Include="TitleScreen.hpp" />
     <ClInclude Include="Town.hpp" />
@@ -106,20 +102,6 @@
     <None Include="resources\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\..\..\..\OneDrive\Desktop\resources\resources\arial.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="grassOriginal.jpg" />
-    <Image Include="grassTileTexture50.png" />
-    <Image Include="resources\Castle_Blue.png" />
-    <Image Include="resources\Castle_Destroyed.png" />
-    <Image Include="resources\Castle_Red.png" />
-    <Image Include="resources\dwarfx1.png" />
-    <Image Include="resources\Onslaught_Logo-BGremoved.png" />
-    <Image Include="resources\skeleton.png" />
-    <Image Include="resources\WASD_Manual_Japanese_BGremoved.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="TypeID_list.txt" />
